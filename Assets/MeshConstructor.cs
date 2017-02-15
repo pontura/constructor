@@ -13,19 +13,24 @@ public class MeshConstructor : MonoBehaviour
     public Vector3 vertRightBottomBack = new Vector3(-1, -1, -1);
     public Vector3 vertLeftBottomBack = new Vector3(1, -1, -1);
 
-    private float waitN = 3f;
-    private float waitD = 3f;
-    public int shapeN = 0;
 
     private MeshFilter mf;
     private Mesh mesh;
 
 	public Element element;
     
-	private float scaleFactor = 5;
+	private float scaleFactor;
+	public bool editableMode;
 
 	void Awake()
 	{		
+		if (World.Instance.size == UIZoom.sizes.BIG)
+			scaleFactor = 0.1f;
+		else if (World.Instance.size == UIZoom.sizes.MEDIUM)
+			scaleFactor = 1f;
+		else
+			scaleFactor = 10;
+		
 		vertLeftTopFront /= scaleFactor;
 		vertRightTopFront /= scaleFactor;
 		vertRightTopBack /= scaleFactor;
@@ -35,6 +40,18 @@ public class MeshConstructor : MonoBehaviour
 		vertRightBottomFront /= scaleFactor;
 		vertRightBottomBack /= scaleFactor;
 		vertLeftBottomBack /= scaleFactor;
+	}
+	void Start()
+	{
+		element = GetComponent<Element> ();
+		mf = GetComponent<MeshFilter>();
+		mesh = mf.mesh;
+		Events.OnResizeWorld += OnResizeWorld;
+	}
+	void OnResizeWorld(UIZoom.sizes _size)
+	{
+		//pontura:  esto es un hack por si pierde el Collider al hacer Resize (a veces pasa):
+		Invoke("RecalculateColliders", 0.1f);
 	}
     public void ChangeVertice(int id, Vector3 pos)
     {
@@ -57,32 +74,25 @@ public class MeshConstructor : MonoBehaviour
         }
         
     }
-    void Start()
-    {
-		element = GetComponent<Element> ();
-        mf = GetComponent<MeshFilter>();
-        mesh = mf.mesh;
-    }
 	public void RecalculateColliders()
 	{
 		done = 0;
 	}
-	public bool editableMode;
+
 	public void SetEditableMode(bool isActive)
 	{
 		editableMode = isActive;
 	}
 	int done;
 	void Update()
-	{		
-		done++;
-		if (done>2 && editableMode == false)
+	{				
+		if (done>1 && editableMode == false)
 			return;
 		ConstructorWork ();
-		if (editableMode) {
-			element.StartBeingEditted ();
-		}
-
+		done++;
+		//if (editableMode) {
+		//	element.StartBeingEditted ();
+		//}
 	}
 	void ConstructorWork()
 	{

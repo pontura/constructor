@@ -7,12 +7,9 @@ public class InputManager : MonoBehaviour
     RaycastHit hit;
     public int _v;
     public int _h;
-    public UnityEngine.EventSystems.EventSystem _eventSystem;
 
     void Update()
     {
-        if (_eventSystem.IsPointerOverGameObject())
-            return;
         if (Input.GetMouseButtonDown(0))
         { 
             RaycastHit mouseHit;

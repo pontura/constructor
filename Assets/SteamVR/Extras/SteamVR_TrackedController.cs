@@ -41,7 +41,7 @@ public class SteamVR_TrackedController : MonoBehaviour
         {
             gameObject.AddComponent<SteamVR_TrackedObject>();
         }
-		controllerIndex = (uint)this.GetComponent<SteamVR_TrackedObject>().index; 
+
 		if (controllerIndex != 0)
 		{
 			this.GetComponent<SteamVR_TrackedObject>().index = (SteamVR_TrackedObject.EIndex)controllerIndex;
@@ -131,7 +131,7 @@ public class SteamVR_TrackedController : MonoBehaviour
     void Update()
     {
 		var system = OpenVR.System;
-		if (system != null && system.GetControllerState(controllerIndex, ref controllerState))
+		if (system != null && system.GetControllerState(controllerIndex, ref controllerState, (uint)System.Runtime.InteropServices.Marshal.SizeOf(typeof(VRControllerState_t))))
 		{
 			ulong trigger = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Trigger));
             if (trigger > 0L && !triggerPressed)

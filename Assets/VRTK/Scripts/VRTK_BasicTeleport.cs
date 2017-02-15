@@ -164,6 +164,7 @@ namespace VRTK
                 Blink(blinkTransitionSpeed);
                 SetNewPosition(newPosition, e.target);
                 OnTeleported(sender, e);
+				Events.OnTeleportTo (newPosition);
             }
         }
 

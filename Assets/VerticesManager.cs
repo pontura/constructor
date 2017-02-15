@@ -10,6 +10,8 @@ public class VerticesManager : MonoBehaviour {
 	public VerticeFaceDraggable verticeFaceDraggable;
 	MeshConstructor meshConstructor;
 
+	private Vector3 verticesSize = new Vector3 (0.1f, 0.1f, 0.1f);
+
 	private int totalVertices = 8;
 
 	void Start () {
@@ -17,6 +19,20 @@ public class VerticesManager : MonoBehaviour {
 		AddVerticeDraggables ();
 		AddFaceVertices();
 		Events.DraggReleased += DraggReleased;
+	}
+	public void ShowOnlyOneVertice(VerticeDraggable vd, bool showIt)
+	{
+		foreach (VerticeDraggable v in verticesDraggables)
+			if (v == vd)
+				v.asset.SetActive (showIt);
+			else
+				v.asset.SetActive (false);
+	}
+	public void HideAllVertices()
+	{
+		foreach (VerticeDraggable v in verticesDraggables)
+			if(v.asset != null)
+				v.asset.SetActive (false);
 	}
 	void OnDestroy()
 	{
@@ -34,6 +50,7 @@ public class VerticesManager : MonoBehaviour {
 			v.transform.SetParent(transform);
 			v.Init(meshConstructor, a, meshConstructor.GetVerticeByID(a, Vector3.zero));
 			verticesDraggables.Add(v);
+			//v.transform.localScale = verticesSize;
 		}       
 	}
 	void Update()
@@ -107,6 +124,7 @@ public class VerticesManager : MonoBehaviour {
 			faceVertice.transform.SetParent (transform);
 			faceVertice.Init (meshConstructor, verticesDraggables.Count + 1, Vector3.zero);
 			faceVertice.SetFaceType ();
+			//faceVertice.transform.localScale = verticesSize;
 			verticesDraggables.Add (faceVertice);
 		}
 		RepositionateFaces ();
@@ -124,23 +142,5 @@ public class VerticesManager : MonoBehaviour {
 			}
 		}
 	}
-
-	private VerticeDraggable v1;
-	private VerticeDraggable v2;
-	public void CheckVerticesToSnap()
-	{
-		if(v1 != null)
-			GetComponent<Element>().snapping.SnapTo (v2.element, v1, v2);
-		RemoveVerticesToSnap ();
-	}
-	public void AddVerticestoSnap(VerticeDraggable v1, VerticeDraggable v2)
-	{
-		this.v1 = v1;
-		this.v2 = v2;
-	}
-	public void RemoveVerticesToSnap()
-	{
-		this.v1 = null;
-		this.v2 = null;
-	}
+		
 }

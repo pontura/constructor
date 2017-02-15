@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class VerticeFaceDraggable : VerticeDraggable {
 
-	public GameObject asset;
+	public GameObject assetShape;
 	public faces face;
+
 	public enum faces
 	{
 		TOP,
@@ -15,14 +16,23 @@ public class VerticeFaceDraggable : VerticeDraggable {
 		BACK,
 		FRONT
 	}
+	void Start()
+	{
+		Events.OnResizeWorldMultiplier += OnResizeWorldMultiplier;
+	}
+	void OnResizeWorldMultiplier(float multiplier)
+	{
+		assetShape.transform.localScale *= multiplier;
+	}
 	public override void ChangeMaterials(Material mat)
 	{
+		return;
 		foreach(MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
 			mr.material = mat;
 	}
-	public void SetFace(faces face)
+	public void SetFace(faces _face)
 	{
-		this.face = face;
+		this.face = _face;
 		SetAsset ();
 	}
 	void SetAsset()
@@ -45,7 +55,7 @@ public class VerticeFaceDraggable : VerticeDraggable {
 			rot = new Vector3 (-90, 0, 0);
 			break;
 		}
-		asset.transform.localEulerAngles = rot;
+		assetShape.transform.localEulerAngles = rot;
 	}
 	public override void NewPos(Vector3 updaterVector)
 	{

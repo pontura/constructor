@@ -195,6 +195,7 @@ namespace VRTK
             {
                 Blink(blinkTransitionSpeed);
             }
+
             SetNewPosition(newPosition, currentFloor.transform);
             OnTeleported(gameObject, teleportArgs);
         }

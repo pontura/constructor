@@ -39,9 +39,13 @@ public class HandConstructor : MonoBehaviour {
 	}
 	void AddOverObjects(GameObject newGO)
 	{
+		
 		foreach (GameObject go in overObjects)
 			if (go == newGO)
 				return;
+
+		//print ("newGO" + newGO.name);
+
 		overObjects.Add (newGO);
 		SetNewRollOver();
 	}
@@ -53,8 +57,13 @@ public class HandConstructor : MonoBehaviour {
 				newGOToRemove = go;
 				break;
 			}
+
+		//print ("RemoveOverObjects" + newGO.name);
+
 		if(newGOToRemove != null)
-			overObjects.Remove (newGOToRemove);					
+			overObjects.Remove (newGOToRemove);		
+
+		Invoke("SetNewRollOver", 0.1f);
 	}
 	void ResetOvers()
 	{
@@ -68,6 +77,8 @@ public class HandConstructor : MonoBehaviour {
 	void SetNewRollOver()
 	{
 		GameObject go = GetActiveObject();
+		if (go == null)
+			return;
 		if (go.GetComponent<VerticeDraggable> ()) {
 			go.GetComponent<VerticeDraggable> ().SetOver (true);
 		} else
@@ -77,12 +88,16 @@ public class HandConstructor : MonoBehaviour {
 	}
 	GameObject GetActiveObject()
 	{
-		foreach (GameObject go in overObjects)
-			if (go.GetComponent<VerticeDraggable> ())
+		foreach (GameObject go in overObjects) {
+			if (go.GetComponent<VerticeDraggable> ()) {
 				return go;
-		foreach (GameObject go in overObjects)
-			if (go.GetComponent<Element> ()) 
+			}
+		}
+		foreach (GameObject go in overObjects) {
+			if (go.GetComponent<Element> ()) {
 				return go;
+			}
+		}
 		return null;
 	}
 	void OnTriggerLeftDown()
@@ -99,7 +114,6 @@ public class HandConstructor : MonoBehaviour {
 	}
 	void OnTriggerLeftUp()
 	{
-		print ("OnTriggerLeftUp: " + state);
 		if (state == states.CARRYING)
 			StopCarrying ();
 		else if(carringElement != null)

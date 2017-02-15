@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Element : MonoBehaviour {
 
+	public Material mat_onMovement;
 	public Material mat_normal;
 	public Material mat_over;
 
@@ -13,13 +14,18 @@ public class Element : MonoBehaviour {
 	MeshConstructor constructor;
 	public VerticesManager verticesManager;
 	public bool isOverVertices;
+	public ElementChilds childs;
 	public ElementSnapping snapping;
 	public states state;
+	private MeshRenderer meshRenderer;
+
 
 	public enum states
 	{
 		IDLE,
-		CARRYING
+		CARRYING,
+		EDITING,
+		INACTIVE
 	}
 
     public enum types
@@ -28,22 +34,26 @@ public class Element : MonoBehaviour {
     }
 	
 	void Start () {
-		Events.OnChangeLeftInteractiveState += OnChangeLeftInteractiveState;
-		Events.OnActivateElements += OnActivateElements;
+		meshRenderer = GetComponent<MeshRenderer> ();
+		childs = GetComponent<ElementChilds> ();
 		_colliders = GetComponent<Collider> ();
 		_rigidBody = GetComponent<Rigidbody> ();
 		constructor = GetComponent<MeshConstructor> ();
 		verticesManager = GetComponent<VerticesManager> ();
 		snapping = GetComponent<ElementSnapping> ();
+		verticesManager.HideAllVertices ();
     }
-	void OnActivateElements()
-	{
-		
-	}
 	void Update()
 	{
-		if (_rigidBody.velocity == Vector3.zero) {
+		if (state == states.INACTIVE)
+			return;
+		if (_rigidBody.velocity == Vector3.zero && _rigidBody.isKinematic == false) {
 			_rigidBody.isKinematic = true;
+			snapping.Init ();
+			state = states.INACTIVE;
+			//está snappeado
+		} else if(_rigidBody.isKinematic == false){
+			//está en movimiento
 		}
 	}
 	void OnTriggerEnter(Collider other)
@@ -58,22 +68,12 @@ public class Element : MonoBehaviour {
 			OnOver (false);
 		}
 	}
-	public void Snapped()
-	{
-		_rigidBody.isKinematic = false;
-		//float v = 0.1f;
-		//_rigidBody.velocity = new Vector3 (v,v,v);
-	}
-	public void StopSnapping()
-	{
-		SetPhysics (true);
-	}
 	void OnOver(bool isOver)
 	{
-		if (isOverVertices)
-			return;
-		if (isOver)
+		if (isOver) {
+			//print ("over CUBE");
 			Events.OnChangeLeftInteractiveState (this.gameObject, true);
+		}
 		else {
 			Events.OnChangeLeftInteractiveState (this.gameObject, false);
 			SetOver (false);
@@ -81,41 +81,63 @@ public class Element : MonoBehaviour {
 	}
 	public void SetOver(bool isOver)
 	{
-		if (isOver)
-			GetComponent<MeshRenderer> ().material = mat_over;
+		if (state == states.EDITING)
+			return;
+		if (state == states.CARRYING)
+			return;
+		if (isOver) {
+			meshRenderer.material = mat_over;
+		}
 		else
-			GetComponent<MeshRenderer> ().material = mat_normal;
+		{
+			meshRenderer.material = mat_normal;
+		}
 	}
-	public void OnOverOnVertices(bool isOverAVertice)
+	public void ShowOnlyOneVertice(VerticeDraggable vd, bool showIt)
 	{
-		if(isOverAVertice)
-			GetComponent<MeshRenderer> ().material = mat_normal;
-		this.isOverVertices = isOverVertices;
+		verticesManager.ShowOnlyOneVertice (vd, showIt);
+		if(showIt)
+			this.isOverVertices = isOverVertices;
 	}
 	private Transform lastParent;
 	public void StartBeingCarried(Transform pivot)
-    {
+    {		
 		SetPhysics (false);
+		verticesManager.HideAllVertices ();
 		lastParent = transform.parent;
 		transform.SetParent (pivot);
 		state = states.CARRYING;
     }
     public void StopBeingCarried()
-    {
+    {		
+		OnOver (false);
 		constructor.RecalculateColliders ();
 		SetPhysics (true);
 		transform.SetParent (lastParent);
 		state = states.IDLE;
-		verticesManager.CheckVerticesToSnap ();
+		Events.StopCarrying (this);
     }
-	public void StartBeingEditted()
+	public void StartBeingSnapped()
 	{
+	}
+	public void StopBeingSnapped()
+	{
+	}
+	public void StartBeingEditted()
+	{		
+		OnOver (false);
+		state = states.EDITING;
 		SetPhysics (false);
 	}
-
+	public void Repositionate()
+	{
+		SetPhysics (true);
+		state = states.IDLE;
+	}
 	public void StopBeingEditted()
 	{
 		SetPhysics (true);
+		state = states.IDLE;
 	}
 	void SetPhysics(bool active)
 	{
@@ -124,9 +146,6 @@ public class Element : MonoBehaviour {
 		_rigidBody.isKinematic = !active;
 		_rigidBody.useGravity = active;
 		_colliders.enabled = active;
-	}
-	void OnChangeLeftInteractiveState(GameObject go, bool isOver)
-	{
 	}
 
 }
