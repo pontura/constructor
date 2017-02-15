@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class VerticeDraggable : MonoBehaviour {
     
-	public GameObject asset;
     public int id;
     private MeshConstructor meshConstructor;
     Transform parent;
@@ -31,28 +30,37 @@ public class VerticeDraggable : MonoBehaviour {
 	{
 		if (other.name == "handOverCollider") {
 			OnOver (true);
-		}
+		} else if(element.state == Element.states.CARRYING){
+			VerticeDraggable otherVD = other.GetComponent<VerticeDraggable> ();
+			if (otherVD != null) {
+				if (element.transform.position.y > otherVD.element.transform.position.y) {
+					element.verticesManager.AddVerticestoSnap (this, otherVD);
+				}
+			}
+		} 
 	}
 	void OnTriggerExit(Collider other)
 	{
 		if (other.name == "handOverCollider") {
 			OnOver (false);
-		}
+		} else {
+			VerticeDraggable otherVD = other.GetComponent<VerticeDraggable> ();
+			if (otherVD != null) 
+				element.verticesManager.RemoveVerticesToSnap ();
+		} 
 	}
 	public void OnOver(bool isOver)
-	{	
-		if (isOver) {
+	{		
+		element.OnOverOnVertices (isOver);
+		if (isOver)
 			Events.OnChangeLeftInteractiveState (this.gameObject, true);
-		}
 		else {
 			Events.OnChangeLeftInteractiveState (this.gameObject, false);
 			SetOver (false);
 		}
-		element.ShowOnlyOneVertice(this, isOver);
 	}
 	public void SetOver(bool isOver)
 	{
-		return;
 		if(isOver)
 			ChangeMaterials( mat_over);
 		else
@@ -60,7 +68,6 @@ public class VerticeDraggable : MonoBehaviour {
 	}
 	public virtual void ChangeMaterials(Material mat)
 	{
-		return;
 		foreach(MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
 			mr.material = mat;
 	}
