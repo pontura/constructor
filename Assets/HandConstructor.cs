@@ -68,21 +68,21 @@ public class HandConstructor : MonoBehaviour {
 	void ResetOvers()
 	{
 		foreach (GameObject go in overObjects) {
-			if (go.GetComponent<VerticeDraggable> ()) 
-				go.GetComponent<VerticeDraggable> ().SetOver (false);
-			else if (go.GetComponent<Element> ()) 
+			if (go.GetComponent<Element> ()) 
 				go.GetComponent<Element> ().SetOver (false);
 		}
 	}
 	void SetNewRollOver()
 	{
 		GameObject go = GetActiveObject();
+
+		print ("SetNewRollOver " + go);
+
 		if (go == null)
 			return;
 		if (go.GetComponent<VerticeDraggable> ()) {
-			go.GetComponent<VerticeDraggable> ().SetOver (true);
-		} else
-			if (go.GetComponent<Element> ()) {
+			
+		} else if (go.GetComponent<Element> ()) {
 				go.GetComponent<Element> ().SetOver (true);
 			}
 	}
@@ -187,17 +187,17 @@ public class HandConstructor : MonoBehaviour {
 		state = states.DRAGGING;
 		vd.StartDragging ();
 
-		foreach (VerticeDraggable vdNew in vd.childs) {
-			vdNew.StartDragging();
-		}
+		//foreach (VerticeDraggable vdNew in vd.childs) {
+		//	vdNew.StartDragging();
+		//}
 		startDraggingPosition = vd.transform.position;
 	}
 	void StopDragging(VerticeDraggable vd)
 	{
 		vd.StopDragging();
-		foreach (VerticeDraggable vdNew in vd.childs) {
-			vdNew.StopDragging();
-		}
+		//foreach (VerticeDraggable vdNew in vd.childs) {
+		//	vdNew.StopDragging();
+		//}
 	}
     void Drag()
     {

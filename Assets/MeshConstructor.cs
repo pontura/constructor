@@ -204,7 +204,7 @@ public class MeshConstructor : MonoBehaviour
 		mesh.Clear();
 		mesh.vertices = vertices;
 		mesh.triangles = triangles;
-		mesh.uv = uvs;
+		//mesh.uv = uvs;
 		mesh.RecalculateNormals();
 	}
 }

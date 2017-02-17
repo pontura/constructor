@@ -4,7 +4,7 @@ using System.Collections;
 public class ElementsManager : MonoBehaviour {
 
 	public Transform world;
-    public Element cubeElement;
+	public ElementCube cubeElement;
 
 	private float lastTimeElementCreated;
 	private float delay_to_create = 0.3f;

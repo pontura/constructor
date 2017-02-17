@@ -11,13 +11,11 @@ public class Element : MonoBehaviour {
 
 	Rigidbody _rigidBody;
 	Collider _colliders;
-	MeshConstructor constructor;
-	public VerticesManager verticesManager;
-	public bool isOverVertices;
+
 	public ElementChilds childs;
 	public ElementSnapping snapping;
 	public states state;
-	private MeshRenderer meshRenderer;
+	public MeshRenderer meshRenderer;
 
 
 	public enum states
@@ -33,15 +31,14 @@ public class Element : MonoBehaviour {
         CUBE
     }
 	
-	void Start () {
+	public virtual void Start () {
 		meshRenderer = GetComponent<MeshRenderer> ();
 		childs = GetComponent<ElementChilds> ();
 		_colliders = GetComponent<Collider> ();
 		_rigidBody = GetComponent<Rigidbody> ();
-		constructor = GetComponent<MeshConstructor> ();
-		verticesManager = GetComponent<VerticesManager> ();
+
 		snapping = GetComponent<ElementSnapping> ();
-		verticesManager.HideAllVertices ();
+
     }
 	void Update()
 	{
@@ -49,7 +46,8 @@ public class Element : MonoBehaviour {
 			return;
 		if (_rigidBody.velocity == Vector3.zero && _rigidBody.isKinematic == false) {
 			_rigidBody.isKinematic = true;
-			snapping.Init ();
+			if(snapping)
+				snapping.Init ();
 			state = states.INACTIVE;
 			//está snappeado
 		} else if(_rigidBody.isKinematic == false){
@@ -71,7 +69,6 @@ public class Element : MonoBehaviour {
 	void OnOver(bool isOver)
 	{
 		if (isOver) {
-			//print ("over CUBE");
 			Events.OnChangeLeftInteractiveState (this.gameObject, true);
 		}
 		else {
@@ -93,30 +90,31 @@ public class Element : MonoBehaviour {
 			meshRenderer.material = mat_normal;
 		}
 	}
-	public void ShowOnlyOneVertice(VerticeDraggable vd, bool showIt)
-	{
-		verticesManager.ShowOnlyOneVertice (vd, showIt);
-		if(showIt)
-			this.isOverVertices = isOverVertices;
-	}
+
+	public virtual void ShowOnlyOneVertice(VerticeDraggable vd, bool isOver) { }
+
 	private Transform lastParent;
 	public void StartBeingCarried(Transform pivot)
     {		
 		SetPhysics (false);
-		verticesManager.HideAllVertices ();
+		OnStartBeingCarried ();
 		lastParent = transform.parent;
 		transform.SetParent (pivot);
 		state = states.CARRYING;
     }
+	public virtual void OnStartBeingCarried() {}
+
     public void StopBeingCarried()
     {		
 		OnOver (false);
-		constructor.RecalculateColliders ();
+		OnStopBeingCarried ();
 		SetPhysics (true);
 		transform.SetParent (lastParent);
 		state = states.IDLE;
 		Events.StopCarrying (this);
     }
+	public virtual void OnStopBeingCarried() {}
+
 	public void StartBeingSnapped()
 	{
 	}

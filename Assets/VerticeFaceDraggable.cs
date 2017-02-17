@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class VerticeFaceDraggable : VerticeDraggable {
 
+	public List<VerticeDraggable> childs;
 	public GameObject assetShape;
 	public faces face;
+	private MeshConstructor meshConstructor;
 
 	public enum faces
 	{
@@ -16,6 +18,29 @@ public class VerticeFaceDraggable : VerticeDraggable {
 		BACK,
 		FRONT
 	}
+	public void Init(MeshConstructor mc, int _id, Vector3 _vectorToModify)
+	{
+		this.element = mc.GetComponent<ElementCube> ();
+		this.meshConstructor = mc;
+		this.id = _id;
+		transform.localPosition = _vectorToModify;
+		gameObject.layer = 8;
+	}
+	public override void UpdatedByConstructor()
+	{
+		meshConstructor.ChangeVertice(id, transform.localPosition);
+	}
+	public override void StartDragging()
+	{
+		lastUpdateVector = Vector3.zero;
+		meshConstructor.SetEditableMode (true);
+		meshConstructor.element.StartBeingEditted ();
+	}
+	public override void StopDragging()
+	{		
+		meshConstructor.SetEditableMode (false);
+		meshConstructor.element.StopBeingEditted ();
+	}
 	void Start()
 	{
 		Events.OnResizeWorldMultiplier += OnResizeWorldMultiplier;
@@ -23,12 +48,6 @@ public class VerticeFaceDraggable : VerticeDraggable {
 	void OnResizeWorldMultiplier(float multiplier)
 	{
 		assetShape.transform.localScale *= multiplier;
-	}
-	public override void ChangeMaterials(Material mat)
-	{
-		return;
-		foreach(MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
-			mr.material = mat;
 	}
 	public void SetFace(faces _face)
 	{

@@ -6,7 +6,7 @@ public class VerticesManager : MonoBehaviour {
 
 	public List<VerticeDraggable> verticesDraggables;
 
-	public VerticeDraggable verticeDraggable;
+	public VerticeFaceDraggable verticeDraggable;
 	public VerticeFaceDraggable verticeFaceDraggable;
 	MeshConstructor meshConstructor;
 
@@ -46,7 +46,7 @@ public class VerticesManager : MonoBehaviour {
 	{
 		for(int a = 0; a<totalVertices; a++)
 		{
-			VerticeDraggable v = Instantiate(verticeDraggable);
+			VerticeFaceDraggable v = Instantiate(verticeDraggable);
 			v.transform.SetParent(transform);
 			v.Init(meshConstructor, a, meshConstructor.GetVerticeByID(a, Vector3.zero));
 			verticesDraggables.Add(v);
@@ -131,10 +131,10 @@ public class VerticesManager : MonoBehaviour {
 	}
 	void RepositionateFaces()
 	{
-		foreach (VerticeDraggable vd in verticesDraggables) {
+		foreach (VerticeFaceDraggable vd in verticesDraggables) {
 			if (vd.childs.Count > 0) {
 				Vector3 newPos = Vector3.zero;
-				foreach (VerticeDraggable child in vd.childs) {
+				foreach (VerticeFaceDraggable child in vd.childs) {
 					newPos += child.transform.localPosition;
 				}
 				newPos /=  vd.childs.Count;
@@ -142,5 +142,4 @@ public class VerticesManager : MonoBehaviour {
 			}
 		}
 	}
-		
 }

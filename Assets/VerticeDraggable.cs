@@ -6,10 +6,8 @@ public class VerticeDraggable : MonoBehaviour {
     
 	public GameObject asset;
     public int id;
-    private MeshConstructor meshConstructor;
-    Transform parent;
+    
 	private int factor = 10;
-	public List<VerticeDraggable> childs;
 
 	public Material mat_normal;
 	public Material mat_over;
@@ -17,16 +15,7 @@ public class VerticeDraggable : MonoBehaviour {
 
 	public Vector3 lastUpdateVector;
 
-
-    public void Init(MeshConstructor mc, int _id, Vector3 _vectorToModify)
-    {
-		this.element = mc.GetComponent<Element> ();
-        this.meshConstructor = mc;
-        this.id = _id;
-        transform.localPosition = _vectorToModify;
-        parent = transform.parent;
-		gameObject.layer = 8;
-    }
+   
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.name == "handOverCollider") {
@@ -46,42 +35,22 @@ public class VerticeDraggable : MonoBehaviour {
 		}
 		else {
 			Events.OnChangeLeftInteractiveState (this.gameObject, false);
-			SetOver (false);
 		}
 		element.ShowOnlyOneVertice(this, isOver);
 	}
-	public void SetOver(bool isOver)
-	{
-		return;
-		if(isOver)
-			ChangeMaterials( mat_over);
-		else
-			ChangeMaterials( mat_normal);
-	}
-	public virtual void ChangeMaterials(Material mat)
-	{
-		return;
-		foreach(MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
-			mr.material = mat;
-	}
+
 	public void SetFaceType()
 	{
 		gameObject.layer = 13;
 	}
-    public void UpdatedByConstructor()
+    public virtual void UpdatedByConstructor()
     {
-        meshConstructor.ChangeVertice(id, transform.localPosition);
     }
-	public void StartDragging()
+	public virtual void StartDragging()
 	{
-		lastUpdateVector = Vector3.zero;
-		meshConstructor.SetEditableMode (true);
-		meshConstructor.element.StartBeingEditted ();
 	}
-	public void StopDragging()
+	public virtual void StopDragging()
 	{		
-		meshConstructor.SetEditableMode (false);
-		meshConstructor.element.StopBeingEditted ();
 	}
     public void UpdatePosition(Vector3 newWorldPosition)
     {
@@ -122,6 +91,18 @@ public class VerticeDraggable : MonoBehaviour {
 		case VerticeFaceDraggable.faces.BACK:
 		case VerticeFaceDraggable.faces.FRONT:
 			localP.z = transform.localPosition.z;
+			break;
+		}
+		transform.localPosition = localP;
+	}
+	public void FixedPositionByFaceTopDown(Vector3 globalDelta, VerticeTopDown.faces face)
+	{
+		Vector3 localP = transform.localPosition;
+		transform.position += globalDelta;
+		switch (face) {
+		case VerticeTopDown.faces.TOP:
+		case VerticeTopDown.faces.BOTTOM:
+			localP.y = transform.localPosition.y;
 			break;
 		}
 		transform.localPosition = localP;
