@@ -4,29 +4,24 @@ using System.Collections;
 [RequireComponent(typeof(SteamVR_TrackedObject))]
 public class ControllerLeft : MonoBehaviour
 {
-
+	public Character character;
+	public HandController hand;
 	SteamVR_TrackedObject trackedObj;
 	public UIZoom uiZoom;
+	//public VRTK.VRTK_HeightAdjustTeleport heightAdjustTeleport;
 
 	void Awake()
-	{
+	{		
 		trackedObj = GetComponent<SteamVR_TrackedObject>();	
 	}
-
-	void FixedUpdate()
-	{		
-		DoSwipe ();
-		var device = SteamVR_Controller.Input((int)trackedObj.index);
-		if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
-			Events.OnTriggerLeftDown();
-		} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
-			Events.OnTriggerLeftUp();
-			Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
-		} else if (device.GetPressDown (SteamVR_Controller.ButtonMask.Touchpad)) {
-			uiZoom.SetEvent ();
-		} 
+	void Start()
+	{
+		//Invoke("Delayed", 0.5f);
 	}
-		
+	void Delayed()
+	{
+		//hand.Pointer (HandController.types.LEFT);
+	}		
 
 	private readonly Vector2 mXAxis = new Vector2(1, 0);
 	private readonly Vector2 mYAxis = new Vector2(0, 1);

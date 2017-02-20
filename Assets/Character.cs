@@ -3,18 +3,14 @@ using System.Collections;
 
 public class Character : MonoBehaviour {
 
-    public InputManager inputManager;
+	public states state;
+	public enum states
+	{
+		CUBE_CONSTRUCTOR,
+		FREE_DRAWING,
+		TELEPORT
+	}
+	public bool interaction_with_ui;
 
-    void Start()
-    {
-
-    }
-    void Update()
-    {
-        Vector3 rot = transform.localEulerAngles;
-        if (inputManager._h != 0) rot.y += inputManager._h;
-        if (inputManager._v != 0) rot.x += inputManager._v;
-        transform.localEulerAngles = Vector3.Lerp(transform.localEulerAngles, rot, 0.5f);
-    }
 
 }

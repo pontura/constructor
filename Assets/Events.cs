@@ -24,6 +24,8 @@ public static class Events
 	public static System.Action<GameObject, bool> OnChangeLeftInteractiveState = delegate { };
 
 	public static System.Action<Vector3> OnTeleportTo = delegate { };
+	public static System.Action<Transform> OnStartUse = delegate { };
+	public static System.Action<Transform> OnStopUse = delegate { };
 
 
 

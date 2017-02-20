@@ -150,10 +150,10 @@ namespace VRTK
             pointerTip.transform.localPosition = new Vector3(0f, 0f, setLength - (pointerTip.transform.localScale.z / 2));
             pointerHolder.transform.localRotation = Quaternion.identity;
             base.SetPlayAreaCursorTransform(pointerTip.transform.position);
-			SetPointerPosition (pointerTip.transform.position);
         }
-		public virtual void SetPointerPosition(Vector3 pos) { }
-
+		public virtual void SetPointerPosition(Vector3 destination)
+		{
+		}
         private float GetPointerBeamLength(bool hasRayHit, RaycastHit collidedWith)
         {
             var actualLength = pointerLength;
@@ -176,6 +176,7 @@ namespace VRTK
             //check if beam has hit a new target
             if (hasRayHit)
             {
+				SetPointerPosition (pointerTip.transform.position);
                 pointerContactDistance = collidedWith.distance;
                 pointerContactTarget = collidedWith.transform;
                 destinationPosition = pointerTip.transform.position;

@@ -5,6 +5,7 @@ using VRTK;
 
 public class SimplePointer_Draw : VRTK_SimplePointer {
 
+	public Character character;
 	public DrawManager drawManager;
 	private VRTK_ControllerEvents events;
 
@@ -15,16 +16,26 @@ public class SimplePointer_Draw : VRTK_SimplePointer {
 		events.AliasPointerOn += AliasPointerOn;
 		events.AliasPointerOff += AliasPointerOff;
 	}
+	protected virtual void OnDisable()
+	{
+		base.OnDisable();
+		events.AliasPointerOn -= AliasPointerOn;
+		events.AliasPointerOff -= AliasPointerOff;
+	}
 	void AliasPointerOn(object o, ControllerInteractionEventArgs args)
 	{
-		drawManager.Init();
+		if(character.state == Character.states.FREE_DRAWING && !character.interaction_with_ui)
+			drawManager.Init();
 	}
 	void AliasPointerOff(object o, ControllerInteractionEventArgs args)
 	{
-		drawManager.End();
+		if(character.state == Character.states.FREE_DRAWING && !character.interaction_with_ui)
+			drawManager.End();
 	}
 	public override void SetPointerPosition(Vector3 destination)
 	{		
-		drawManager.SetPosition(destination);
+		base.SetPointerPosition (destination);
+		if(character.state == Character.states.FREE_DRAWING && !character.interaction_with_ui)
+			drawManager.SetPosition(destination);
 	}
 }

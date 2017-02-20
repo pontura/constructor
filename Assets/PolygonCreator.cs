@@ -21,6 +21,12 @@ public class PolygonCreator : MonoBehaviour {
 
 	public bool editableMode;
 
+	private MeshCollider meshcollider; 
+
+	void Start()
+	{
+		meshcollider = GetComponent<MeshCollider> ();
+	}
 	public Vector3 GetCenter(bool top)
 	{
 		Vector3 prom = Vector3.zero;
@@ -92,6 +98,9 @@ public class PolygonCreator : MonoBehaviour {
 	{				
 		if (polyLength == 0)
 			return;
+
+		CalculateNormals ();
+
 		if (done>2 && editableMode == false)
 			return;
 		CreateMesh ();
@@ -99,8 +108,7 @@ public class PolygonCreator : MonoBehaviour {
 	}
 	void CreateMesh()
 	{
-
-		GetComponent<MeshCollider>().sharedMesh = filter.mesh;
+		meshcollider.sharedMesh = filter.mesh;
 
 		for(int i=0;i<polyLength;i++)
 		{
@@ -151,7 +159,8 @@ public class PolygonCreator : MonoBehaviour {
 		mesh.vertices = vertices;
 		mesh.triangles = triangles;
 		//mesh.uv = uvs;
-		mesh.RecalculateNormals();
+
+		CalculateNormals ();
 
 
 
@@ -188,5 +197,9 @@ public class PolygonCreator : MonoBehaviour {
 
 			count_tris += 6;
 		}
+	}
+	void CalculateNormals()
+	{
+		mesh.RecalculateNormals();
 	}
 }

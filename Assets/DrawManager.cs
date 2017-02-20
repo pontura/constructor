@@ -53,7 +53,7 @@ public class DrawManager : MonoBehaviour {
 	ElementFree element;
 	Vector2[] points;
 	void CreatePolygon()
-	{				
+	{			
 		float scaleFactor = 1;
 		if (World.Instance.size == UIZoom.sizes.BIG)
 			scaleFactor = 100f;
