@@ -18,13 +18,13 @@ public class VerticeDraggable : MonoBehaviour {
    
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.name == "handOverCollider") {
+		if (other.name == "handOverColliderLeft") {
 			OnOver (true);
 		}
 	}
 	void OnTriggerExit(Collider other)
 	{
-		if (other.name == "handOverCollider") {
+		if (other.name == "handOverColliderLeft") {
 			OnOver (false);
 		}
 	}

@@ -39,9 +39,18 @@ public class Element : MonoBehaviour {
 
 		snapping = GetComponent<ElementSnapping> ();
 
+		if (!World.Instance.useGravity) {
+			_rigidBody.velocity = Vector3.zero;
+			_rigidBody.isKinematic = true;
+			_rigidBody.useGravity = false;
+			_colliders.enabled = true;
+		}
+
     }
 	void Update()
 	{
+		if (!World.Instance.useGravity)
+			return;
 		if (state == states.INACTIVE)
 			return;
 		if (_rigidBody.velocity == Vector3.zero && _rigidBody.isKinematic == false) {
@@ -57,19 +66,23 @@ public class Element : MonoBehaviour {
 	}
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.name == "handOverCollider") {
+		print(" OnTriggerEnter __________ " + other.name);
+		if (other.name == "handOverColliderRight") {
 			OnOver (true);
 		}
 	}
 	void OnTriggerExit(Collider other)
 	{
-		if (other.name == "handOverCollider") {
+		print("OnTriggerExit __________ " + other.name);
+		if (other.name == "handOverColliderRight") {
 			OnOver (false);
 		}
 	}
 	void OnOver(bool isOver)
 	{
 		if (isOver) {
+			//este es nuevo:SetOver (true);
+			SetOver (true);
 			Events.OnChangeLeftInteractiveState (this.gameObject, true);
 		}
 		else {
@@ -79,10 +92,10 @@ public class Element : MonoBehaviour {
 	}
 	public void SetOver(bool isOver)
 	{
-		if (state == states.EDITING)
-			return;
-		if (state == states.CARRYING)
-			return;
+		//if (state == states.EDITING)
+		//	return;
+		//if (state == states.CARRYING)
+		//	return;
 		if (isOver) {
 			meshRenderer.material = mat_over;
 		}
@@ -144,6 +157,8 @@ public class Element : MonoBehaviour {
 	}
 	void SetPhysics(bool active)
 	{
+		if (!World.Instance.useGravity)
+			return;
 		//print ("SetPhysics " + active);
 		if(!active)
 			_rigidBody.velocity = Vector3.zero;

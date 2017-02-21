@@ -81,16 +81,30 @@ public class ControllerRight : MonoBehaviour {
 			}
 		} else if (character.state == Character.states.FREE_DRAWING) {	
 			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
-				Events.OnTriggerLeftDown ();
+				Events.OnTriggerRightDown ();
 			} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
-				Events.OnTriggerLeftUp ();
+				Events.OnTriggerRightUp ();
 				Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
+				character.ChangeState (Character.states.EDITING);
 			}
 		} else if (character.state == Character.states.CUBE_CONSTRUCTOR) {
 			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
-				Events.OnAddElement (Element.types.CUBE, transform.position);				
+				Events.OnAddElement (Element.types.CUBE, transform.position);	
+				character.ChangeState (Character.states.EDITING);
 			}
 		}
+		else if (character.state == Character.states.EDITING) {
+			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
+				Events.OnTriggerRightDown ();
+			} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
+				Events.OnTriggerRightUp ();
+			}
+		}
+
+
+
+
+		return;
 		if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Touchpad)) {
 			hand.Grab (HandController.types.RIGHT);
 			Events.OnTriggerLeftDown ();

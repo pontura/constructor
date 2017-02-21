@@ -8,6 +8,7 @@ public class World : MonoBehaviour {
 	public float zoomMultiplier;
 	static World mInstance = null;
 	public GameObject cameraRig;
+	public bool useGravity;
 
 	public static World Instance
 	{

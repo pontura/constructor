@@ -10,6 +10,7 @@ public class HandConstructor : MonoBehaviour {
 	public GameObject pivot;
 	public Element carringElement;
 	public List<GameObject> overObjects;
+	public bool isLeft;
 
     public enum states
     {
@@ -23,9 +24,13 @@ public class HandConstructor : MonoBehaviour {
 	void Start () {
         colliders = GetComponent<Collider>();
 		Events.ChangeConstructionState += ChangeConstructionState;
-
-		Events.OnTriggerLeftDown += OnTriggerLeftDown;
-		Events.OnTriggerLeftUp += OnTriggerLeftUp;
+		if (!isLeft) {
+			Events.OnTriggerRightDown += OnTriggerRightDown;
+			Events.OnTriggerRightUp += OnTriggerRighttUp;
+		} else  {
+			Events.OnTriggerLeftDown += OnTriggerLeftDown;
+			Events.OnTriggerLeftUp += OnTriggerLeftUp;
+		}
 		Events.OnChangeLeftInteractiveState += OnChangeLeftInteractiveState;
     }
 
@@ -100,6 +105,24 @@ public class HandConstructor : MonoBehaviour {
 		}
 		return null;
 	}
+	void OnTriggerRightDown()
+	{
+		GameObject go = GetActiveObject ();
+		if (go == null)
+			return;
+		if (go.GetComponent<Element> ()) {
+			StartCarryingElement (go.GetComponent<Element> ());
+		}
+	}
+	void OnTriggerRighttUp()
+	{
+		if (state == states.CARRYING)
+			StopCarrying ();
+		else if(carringElement != null)
+			StopCarrying ();
+	}
+
+
 	void OnTriggerLeftDown()
 	{
 		GameObject go = GetActiveObject ();
@@ -107,20 +130,15 @@ public class HandConstructor : MonoBehaviour {
 			return;
 		if (go.GetComponent<VerticeDraggable> ()) {
 			StartDragging (go.GetComponent<VerticeDraggable> ());
-		} else
-		if (go.GetComponent<Element> ()) {
-			StartCarryingElement (go.GetComponent<Element> ());
 		}
 	}
 	void OnTriggerLeftUp()
 	{
-		if (state == states.CARRYING)
-			StopCarrying ();
-		else if(carringElement != null)
-			StopCarrying ();
-		else if (state == states.DRAGGING)
+		if (state == states.DRAGGING)
 			DraggReleased();
 	}
+
+
 	void ChangeConstructionState(states newState)
 	{
 		this.state = newState;

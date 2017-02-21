@@ -5,7 +5,8 @@ using UnityEngine;
 public class UIPanel : MonoBehaviour {
 
 	public buttons button;
-	public UIZoom uiZoom;
+	public GameObject panel;
+
 	public enum buttons
 	{		
 		CUBE_CONSTRUCTOR,
@@ -19,8 +20,12 @@ public class UIPanel : MonoBehaviour {
 	void Start()
 	{
 		ClickSimpleButton (buttons.CUBE_CONSTRUCTOR);
+		Events.ShowUI += ShowUI;
 	}
-
+	void ShowUI(bool isActive)
+	{
+		panel.SetActive (isActive);
+	}
 	public void ClickSimpleButton(buttons button)
 	{
 		switch (button) {

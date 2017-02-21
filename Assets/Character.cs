@@ -4,8 +4,10 @@ using System.Collections;
 public class Character : MonoBehaviour {
 
 	public states state;
+
 	public enum states
 	{
+		EDITING,
 		CUBE_CONSTRUCTOR,
 		FREE_DRAWING,
 		TELEPORT

@@ -8,19 +8,26 @@ public class ControllerLeft : MonoBehaviour
 	public HandController hand;
 	SteamVR_TrackedObject trackedObj;
 	public UIZoom uiZoom;
-	//public VRTK.VRTK_HeightAdjustTeleport heightAdjustTeleport;
+	public UIPanel uiPanel;
 
 	void Awake()
 	{		
 		trackedObj = GetComponent<SteamVR_TrackedObject>();	
 	}
-	void Start()
-	{
-		//Invoke("Delayed", 0.5f);
-	}
-	void Delayed()
-	{
-		//hand.Pointer (HandController.types.LEFT);
+	void Update()
+	{		
+		var device = SteamVR_Controller.Input((int)trackedObj.index);
+		if (character.interaction_with_ui == true) {
+			return;
+		} 
+		if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
+			hand.Grab (HandController.types.LEFT);
+			Events.OnTriggerLeftDown ();
+		} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
+			hand.Idle (HandController.types.LEFT);
+			Events.OnTriggerLeftUp ();
+			Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
+		}
 	}		
 
 	private readonly Vector2 mXAxis = new Vector2(1, 0);
