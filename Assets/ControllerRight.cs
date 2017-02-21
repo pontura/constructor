@@ -27,7 +27,6 @@ public class ControllerRight : MonoBehaviour {
 	}
 	public void OverUI(bool isOver)
 	{
-		print ("over" + isOver);
 		if (isOver) {
 			simplePointer.enabled = true;
 			hand.Pointer (HandController.types.RIGHT);
@@ -91,14 +90,14 @@ public class ControllerRight : MonoBehaviour {
 			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
 				Events.OnAddElement (Element.types.CUBE, transform.position);				
 			}
-			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Touchpad)) {
-				hand.Grab (HandController.types.RIGHT);
-				Events.OnTriggerLeftDown();
-			} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Touchpad)) {
-				hand.Idle(HandController.types.RIGHT);
-				Events.OnTriggerLeftUp();
-				Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
-			}
+		}
+		if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Touchpad)) {
+			hand.Grab (HandController.types.RIGHT);
+			Events.OnTriggerLeftDown ();
+		} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Touchpad)) {
+			hand.Idle (HandController.types.RIGHT);
+			Events.OnTriggerLeftUp ();
+			Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
 		}
 	}
 }

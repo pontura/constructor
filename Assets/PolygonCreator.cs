@@ -16,8 +16,8 @@ public class PolygonCreator : MonoBehaviour {
 	Triangulator triangulator;
 	int polyLength;
 
-	private float offsetInitial_down= 	-0.05f;
-	private float offsetInitial_up = 	0.05f;
+	private float offsetInitial_down= 	-0.1f;
+	private float offsetInitial_up = 	0.1f;
 
 	public bool editableMode;
 

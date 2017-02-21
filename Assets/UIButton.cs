@@ -8,19 +8,26 @@
 
 		public bool isOver;
 		public GameObject activeBG;
+		public bool initSelected;
 
-		void Start()
+		public virtual void Start()
 		{
 			Events.OnStartUse_UIObject += OnStartUse_UIObject;
 			Events.OnStopUse_UIObject += OnStopUse_UIObject;
 			Events.OnTriggerOverUI += OnTriggerOverUI;
+			Events.OnUIButtonSelected += OnUIButtonSelected;
+			if(initSelected)
+				SetButtonActive (true);
+		}
+		public virtual void OnUIButtonSelected(UIButton uiButton)
+		{
 		}
 		public virtual void OnTriggerOverUI()
 		{
-			if (isOver)  
+			if (isOver) {
 				SetButtonActive (true);
-			 else
-				SetButtonActive (false);
+				Events.OnUIButtonSelected (this);
+			}
 		}
 		void OnStartUse_UIObject(Transform t)
 		{

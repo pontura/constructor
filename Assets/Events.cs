@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using VRTK.Examples;
 
 public static class Events
 {
@@ -28,7 +29,7 @@ public static class Events
 	public static System.Action<Transform> OnStartUse_UIObject = delegate { };
 	public static System.Action<Transform> OnStopUse_UIObject = delegate { };
 	public static System.Action OnTriggerOverUI = delegate { };
-
+	public static System.Action<VRTK.Examples.UIButton> OnUIButtonSelected = delegate { };
 
 
 

@@ -16,10 +16,13 @@ public class UIPanel : MonoBehaviour {
 		SCALE_X3
 	}
 	public Character character;
+	void Start()
+	{
+		ClickSimpleButton (buttons.CUBE_CONSTRUCTOR);
+	}
 
 	public void ClickSimpleButton(buttons button)
 	{
-		print ("ClickSimpleButton " + button);
 		switch (button) {
 		case buttons.CUBE_CONSTRUCTOR:
 			character.ChangeState (Character.states.CUBE_CONSTRUCTOR);

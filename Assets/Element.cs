@@ -45,6 +45,7 @@ public class Element : MonoBehaviour {
 		if (state == states.INACTIVE)
 			return;
 		if (_rigidBody.velocity == Vector3.zero && _rigidBody.isKinematic == false) {
+			//print ("INACTIVE!!  " + state);
 			_rigidBody.isKinematic = true;
 			if(snapping)
 				snapping.Init ();
@@ -96,6 +97,7 @@ public class Element : MonoBehaviour {
 	private Transform lastParent;
 	public void StartBeingCarried(Transform pivot)
     {		
+		//print ("StartBeingCarried");	
 		SetPhysics (false);
 		OnStartBeingCarried ();
 		lastParent = transform.parent;
@@ -105,7 +107,8 @@ public class Element : MonoBehaviour {
 	public virtual void OnStartBeingCarried() {}
 
     public void StopBeingCarried()
-    {		
+    {	
+		//print ("StopBeingCarried");	
 		OnOver (false);
 		OnStopBeingCarried ();
 		SetPhysics (true);
@@ -123,6 +126,7 @@ public class Element : MonoBehaviour {
 	}
 	public void StartBeingEditted()
 	{		
+		//print ("StartBeingEditted");	
 		OnOver (false);
 		state = states.EDITING;
 		SetPhysics (false);
@@ -134,16 +138,19 @@ public class Element : MonoBehaviour {
 	}
 	public void StopBeingEditted()
 	{
+		//print ("StopBeingEditted");	
 		SetPhysics (true);
 		state = states.IDLE;
 	}
 	void SetPhysics(bool active)
 	{
+		//print ("SetPhysics " + active);
 		if(!active)
 			_rigidBody.velocity = Vector3.zero;
 		_rigidBody.isKinematic = !active;
 		_rigidBody.useGravity = active;
 		_colliders.enabled = active;
+		_rigidBody.velocity = new Vector3 (0f, -0.001f, 0f);
 	}
 
 }
