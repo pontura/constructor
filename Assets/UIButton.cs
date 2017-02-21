@@ -16,8 +16,11 @@
 			Events.OnStopUse_UIObject += OnStopUse_UIObject;
 			Events.OnTriggerOverUI += OnTriggerOverUI;
 			Events.OnUIButtonSelected += OnUIButtonSelected;
+			Events.OnUIButtonActivate += OnUIButtonActivate;
 			if(initSelected)
 				SetButtonActive (true);
+		}
+		public virtual void OnUIButtonActivate(UIPanel.buttons b) {
 		}
 		public virtual void OnUIButtonSelected(UIButton uiButton)
 		{

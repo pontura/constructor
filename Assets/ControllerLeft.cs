@@ -15,12 +15,15 @@ public class ControllerLeft : MonoBehaviour
 		trackedObj = GetComponent<SteamVR_TrackedObject>();	
 	}
 	void Update()
-	{		
+	{	
+
 		var device = SteamVR_Controller.Input((int)trackedObj.index);
-		if (character.interaction_with_ui == true) {
-			return;
-		} 
-		if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
+
+		if (device.GetPressDown (SteamVR_Controller.ButtonMask.Touchpad)) {
+			Events.ShowUI (true);
+		} else if (device.GetPressUp (SteamVR_Controller.ButtonMask.Touchpad)) {
+			Events.ShowUI (false);
+		} else if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
 			hand.Grab (HandController.types.LEFT);
 			Events.OnTriggerLeftDown ();
 		} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
@@ -28,6 +31,7 @@ public class ControllerLeft : MonoBehaviour
 			Events.OnTriggerLeftUp ();
 			Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
 		}
+
 	}		
 
 	private readonly Vector2 mXAxis = new Vector2(1, 0);

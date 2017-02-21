@@ -32,6 +32,7 @@ public class Element : MonoBehaviour {
     }
 	
 	public virtual void Start () {
+		Events.OnRecalculateGravity += OnRecalculateGravity;
 		meshRenderer = GetComponent<MeshRenderer> ();
 		childs = GetComponent<ElementChilds> ();
 		_colliders = GetComponent<Collider> ();
@@ -47,6 +48,18 @@ public class Element : MonoBehaviour {
 		}
 
     }
+	void OnRecalculateGravity()
+	{
+		_rigidBody.isKinematic = false;
+		_rigidBody.useGravity = true;
+		_colliders.enabled = true;
+		state = states.INACTIVE;
+		Invoke ("Delayed", 0.01f);
+	}
+	void Delayed()
+	{
+		state = states.IDLE;
+	}
 	void Update()
 	{
 		if (!World.Instance.useGravity)
@@ -66,14 +79,12 @@ public class Element : MonoBehaviour {
 	}
 	void OnTriggerEnter(Collider other)
 	{
-		print(" OnTriggerEnter __________ " + other.name);
 		if (other.name == "handOverColliderRight") {
 			OnOver (true);
 		}
 	}
 	void OnTriggerExit(Collider other)
 	{
-		print("OnTriggerExit __________ " + other.name);
 		if (other.name == "handOverColliderRight") {
 			OnOver (false);
 		}

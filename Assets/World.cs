@@ -9,6 +9,7 @@ public class World : MonoBehaviour {
 	static World mInstance = null;
 	public GameObject cameraRig;
 	public bool useGravity;
+	public bool useSnapping;
 
 	public static World Instance
 	{
@@ -25,7 +26,7 @@ public class World : MonoBehaviour {
 	void Start()
 	{
 		Events.OnResizeWorld += OnResizeWorld;
-		OnResizeWorld (UIZoom.sizes.SMALL);
+		OnResizeWorld (UIZoom.sizes.MEDIUM);
 	}
 	void OnResizeWorld(UIZoom.sizes _size)
 	{

@@ -23,23 +23,23 @@ public class ControllerRight : MonoBehaviour {
 		bezierPointer = GetComponent<VRTK_BezierPointer> ();
 		simplePointer = GetComponent<SimplePointer_Draw> ();
 
-		Events.OnChangeCharacterState += OnChangeCharacterState;
+		Events.ShowUI += OverUI;
 	}
 	public void OverUI(bool isOver)
 	{
 		if (isOver) {
 			simplePointer.enabled = true;
+			bezierPointer.enabled = false;
 			hand.Pointer (HandController.types.RIGHT);
 		} else {
-			OnChangeCharacterState (lastState);
+			OnActivateAction (character.state);
 		}
 	}
-	Character.states lastState;
-	void OnChangeCharacterState(Character.states state)
+	void OnActivateAction(Character.states state)
 	{
-		this.lastState = state;
 		switch (state) {
 		case Character.states.CUBE_CONSTRUCTOR:
+		case Character.states.EDITING:
 			hand.Idle (HandController.types.RIGHT);
 			bezierPointer.enabled = false;
 			simplePointer.enabled = false;
@@ -51,7 +51,6 @@ public class ControllerRight : MonoBehaviour {
 			break;
 		case Character.states.TELEPORT:
 			hand.Pointer (HandController.types.RIGHT);
-
 			simplePointer.enabled = false;
 			break;
 		}
@@ -66,7 +65,7 @@ public class ControllerRight : MonoBehaviour {
 	{		
 		var device = SteamVR_Controller.Input((int)trackedObj.index);
 		if (character.interaction_with_ui == true) {	
-			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
+			if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
 				Events.OnTriggerOverUI();
 			}
 			return;
@@ -96,22 +95,11 @@ public class ControllerRight : MonoBehaviour {
 		else if (character.state == Character.states.EDITING) {
 			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
 				Events.OnTriggerRightDown ();
+				hand.Grab (HandController.types.RIGHT);
 			} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
 				Events.OnTriggerRightUp ();
+				hand.Idle (HandController.types.RIGHT);
 			}
-		}
-
-
-
-
-		return;
-		if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Touchpad)) {
-			hand.Grab (HandController.types.RIGHT);
-			Events.OnTriggerLeftDown ();
-		} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Touchpad)) {
-			hand.Idle (HandController.types.RIGHT);
-			Events.OnTriggerLeftUp ();
-			Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
 		}
 	}
 }

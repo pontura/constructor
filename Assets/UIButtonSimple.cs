@@ -14,7 +14,18 @@
 		{
 			EDITION,
 			ZOOM,
-			COLORS
+			GRAVITY,
+			SNAPPING
+		}
+		public override void OnUIButtonActivate(UIPanel.buttons b) 
+		{
+			if(b == UIPanel.buttons.EDITING)
+			{
+				if (b == button)
+					SetButtonActive (true);
+				else if(type == types.EDITION)
+					SetButtonActive (false);
+			}
 		}
 		public override void OnUIButtonSelected(UIButton uiButton)
 		{

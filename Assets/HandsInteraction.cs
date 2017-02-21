@@ -9,8 +9,7 @@ public class HandsInteraction : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col)
 	{
-		if (col.tag == "UI") {
-			Events.ShowUI (true);
+		if (col.tag == "UI") {			
 			character.interaction_with_ui = true;
 			controllerRight.OverUI (true);
 		}
@@ -18,7 +17,6 @@ public class HandsInteraction : MonoBehaviour {
 	void OnTriggerExit(Collider col)
 	{
 		if (col.tag == "UI") {
-			Events.ShowUI (false);
 			character.interaction_with_ui = false;
 			controllerRight.OverUI (false);
 		}

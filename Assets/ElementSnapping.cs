@@ -12,12 +12,14 @@ public class ElementSnapping : MonoBehaviour {
 	}
 	public void Init()
 	{
+		if (!World.Instance.useSnapping)
+			return;
 		element.StartBeingSnapped ();
 		UpdatePosition (transform.localPosition);
 		UpdateEulerAngles (transform.eulerAngles);
 	}
 	public void UpdatePosition(Vector3 pos)
-	{
+	{		
 		Vector3 newPos = new Vector3 (
 			ToDecimals (pos.x),
 			ToDecimals (pos.y),
