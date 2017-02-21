@@ -322,7 +322,7 @@ namespace VRTK
         {
             return (io && io.pointerActivatesUseAction && io.IsValidInteractableController(controller.gameObject, io.allowedUseControllers));
         }
-
+		Transform lastUsed = null;
         private void StartUseAction(Transform target)
         {
             interactableObject = target.GetComponent<VRTK_InteractableObject>();
@@ -330,7 +330,12 @@ namespace VRTK
 
             if (PointerActivatesUseAction(interactableObject) && interactableObject.holdButtonToUse && !cannotUseBecauseNotGrabbed)
             {
-                interactableObject.StartUsing(gameObject);
+				if (lastUsed != target) {
+					Events.OnStartUse_UIObject (target);
+					lastUsed = target;
+				}
+               // interactableObject.StartUsing(gameObject);
+
             }
         }
 
@@ -338,7 +343,9 @@ namespace VRTK
         {
             if (PointerActivatesUseAction(interactableObject) && interactableObject.holdButtonToUse)
             {
-                interactableObject.StopUsing(gameObject);
+				lastUsed = null;
+				Events.OnStopUse_UIObject (interactableObject.transform);
+                //interactableObject.StopUsing(gameObject);
             }
         }
 

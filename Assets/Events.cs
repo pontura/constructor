@@ -22,10 +22,12 @@ public static class Events
 	public static System.Action OnTriggerLeftDown = delegate { };
 	public static System.Action OnTriggerLeftUp = delegate { };
 	public static System.Action<GameObject, bool> OnChangeLeftInteractiveState = delegate { };
+	public static System.Action<Character.states> OnChangeCharacterState = delegate { };
 
 	public static System.Action<Vector3> OnTeleportTo = delegate { };
-	public static System.Action<Transform> OnStartUse = delegate { };
-	public static System.Action<Transform> OnStopUse = delegate { };
+	public static System.Action<Transform> OnStartUse_UIObject = delegate { };
+	public static System.Action<Transform> OnStopUse_UIObject = delegate { };
+	public static System.Action OnTriggerOverUI = delegate { };
 
 
 

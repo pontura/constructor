@@ -4,13 +4,41 @@ using UnityEngine;
 
 public class UIPanel : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
+	public buttons button;
+	public UIZoom uiZoom;
+	public enum buttons
+	{		
+		CUBE_CONSTRUCTOR,
+		FREE_DRAWING,
+		TELEPORT,
+		SCALE_X1,
+		SCALE_X2,
+		SCALE_X3
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	public Character character;
+
+	public void ClickSimpleButton(buttons button)
+	{
+		print ("ClickSimpleButton " + button);
+		switch (button) {
+		case buttons.CUBE_CONSTRUCTOR:
+			character.ChangeState (Character.states.CUBE_CONSTRUCTOR);
+			break;
+		case buttons.FREE_DRAWING:
+			character.ChangeState (Character.states.FREE_DRAWING);
+			break;
+		case buttons.TELEPORT:
+			character.ChangeState (Character.states.TELEPORT);
+			break;
+		case buttons.SCALE_X1:
+			Events.OnResizeWorld (UIZoom.sizes.SMALL);
+			break;
+		case buttons.SCALE_X2:
+			Events.OnResizeWorld (UIZoom.sizes.MEDIUM);
+			break;
+		case buttons.SCALE_X3:
+			Events.OnResizeWorld (UIZoom.sizes.BIG);
+			break;
+		}
 	}
 }

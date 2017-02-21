@@ -6,28 +6,36 @@
 
 	public class UIButton : VRTK_InteractableObject {
 
-		protected override void Start()
-		{
-			base.Start();
-			//Events.OnStartUse += OnStartUse;
-		}
-		void OnStartUse(Transform t)
-		{
-			if (t == transform) {
-				print ("_________");
-			}
-		}
-		public virtual void StartTouching(GameObject currentTouchingObject)
-		{
-			print ("_______OVER: " + gameObject.name);
-			base.StartTouching(currentTouchingObject);
+		public bool isOver;
+		public GameObject activeBG;
 
-		}
-		public virtual void StartUsing(GameObject currentUsingObject)
+		void Start()
 		{
-			print ("_______OUT " + gameObject.name);
-			base.StartUsing(currentUsingObject);
-
+			Events.OnStartUse_UIObject += OnStartUse_UIObject;
+			Events.OnStopUse_UIObject += OnStopUse_UIObject;
+			Events.OnTriggerOverUI += OnTriggerOverUI;
+		}
+		public virtual void OnTriggerOverUI()
+		{
+			if (isOver)  
+				SetButtonActive (true);
+			 else
+				SetButtonActive (false);
+		}
+		void OnStartUse_UIObject(Transform t)
+		{
+			if (t == transform)
+				isOver = true;
+		}
+		void OnStopUse_UIObject(Transform t)
+		{
+			if (t == transform)
+				isOver = false;
+		}
+		public void SetButtonActive (bool isActive)
+		{
+			activeBG.SetActive (isActive);
+			isOver = false;
 		}
 	}
 }

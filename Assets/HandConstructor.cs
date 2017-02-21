@@ -76,7 +76,7 @@ public class HandConstructor : MonoBehaviour {
 	{
 		GameObject go = GetActiveObject();
 
-		print ("SetNewRollOver " + go);
+		//print ("SetNewRollOver " + go);
 
 		if (go == null)
 			return;

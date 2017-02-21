@@ -19,14 +19,43 @@ public class ControllerRight : MonoBehaviour {
 	public VRTK.VRTK_HeightAdjustTeleport heightAdjustTeleport;
 
 	void Start()
-	{
-		Invoke("Delayed", 0.5f);
+	{		
 		bezierPointer = GetComponent<VRTK_BezierPointer> ();
 		simplePointer = GetComponent<SimplePointer_Draw> ();
+
+		Events.OnChangeCharacterState += OnChangeCharacterState;
 	}
-	void Delayed()
+	public void OverUI(bool isOver)
 	{
-		hand.Pointer (HandController.types.LEFT);
+		print ("over" + isOver);
+		if (isOver) {
+			simplePointer.enabled = true;
+			hand.Pointer (HandController.types.RIGHT);
+		} else {
+			OnChangeCharacterState (lastState);
+		}
+	}
+	Character.states lastState;
+	void OnChangeCharacterState(Character.states state)
+	{
+		this.lastState = state;
+		switch (state) {
+		case Character.states.CUBE_CONSTRUCTOR:
+			hand.Idle (HandController.types.RIGHT);
+			bezierPointer.enabled = false;
+			simplePointer.enabled = false;
+			break;
+		case Character.states.FREE_DRAWING:
+			hand.Pointer (HandController.types.RIGHT);
+			bezierPointer.enabled = false;
+			simplePointer.enabled = true;
+			break;
+		case Character.states.TELEPORT:
+			hand.Pointer (HandController.types.RIGHT);
+
+			simplePointer.enabled = false;
+			break;
+		}
 	}
 
 	void Awake()
@@ -34,27 +63,18 @@ public class ControllerRight : MonoBehaviour {
 		trackedObj = GetComponent<SteamVR_TrackedObject>();	
 	}
 
-	void FixedUpdate()
+	void Update()
 	{		
-		ResetAll ();
 		var device = SteamVR_Controller.Input((int)trackedObj.index);
-		if (character.interaction_with_ui == true) {			
-			simplePointer.enabled = true;
-			bezierPointer.enabled = false;
+		if (character.interaction_with_ui == true) {	
+			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
+				Events.OnTriggerOverUI();
+			}
 			return;
 		} 
-		if (character.state == Character.states.TELEPORT) {
-			bezierPointer.enabled = true;
-		} else {
-			bezierPointer.enabled = false;
-		}
-		if (character.state == Character.states.FREE_DRAWING) {
-			simplePointer.enabled = true;
-		} else {
-			simplePointer.enabled = false;
-		}
 
 		if (character.state == Character.states.TELEPORT) {
+			bezierPointer.enabled = true;
 			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Touchpad)) {
 				heightAdjustTeleport.ignoreTargetWithTagOrClass = "None";
 			} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Touchpad)) {
@@ -64,7 +84,6 @@ public class ControllerRight : MonoBehaviour {
 			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
 				Events.OnTriggerLeftDown ();
 			} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Trigger)) {
-				Events.OnTriggerLeftDown ();
 				Events.OnTriggerLeftUp ();
 				Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
 			}
@@ -72,37 +91,14 @@ public class ControllerRight : MonoBehaviour {
 			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
 				Events.OnAddElement (Element.types.CUBE, transform.position);				
 			}
+			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Touchpad)) {
+				hand.Grab (HandController.types.RIGHT);
+				Events.OnTriggerLeftDown();
+			} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Touchpad)) {
+				hand.Idle(HandController.types.RIGHT);
+				Events.OnTriggerLeftUp();
+				Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
+			}
 		}
-
-
-		if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Touchpad)) {
-			Events.OnTriggerLeftDown();
-		} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Touchpad)) {
-			Events.OnTriggerLeftUp();
-			Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
-		}
-
-
-
-
-
-
-		///} else if (device.GetPressDown (SteamVR_Controller.ButtonMask.Touchpad)) {
-		//uiZoom.SetEvent ();
-		//} 
-
-		if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
-
-		} 
-		if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Touchpad)) {
-			//heightAdjustTeleport.ignoreTargetWithTagOrClass = "None";
-		} else if (device.GetTouchUp (SteamVR_Controller.ButtonMask.Touchpad)) {
-			//	heightAdjustTeleport.ignoreTargetWithTagOrClass = "Element";
-		}
-	}
-	void ResetAll()
-	{
-		//bezierPointer.enabled = false;
-		//simplePointer.enabled = false;
 	}
 }

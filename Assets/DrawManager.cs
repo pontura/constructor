@@ -7,7 +7,7 @@ public class DrawManager : MonoBehaviour {
 	public ElementFree elementFree;
 	public DrawingAsset paintAsset;
 	public Transform container;
-	private float fpsToDraw = 0.5f;
+	private float fpsToDraw = 0.005f;
 	private float fps;
 	private states state;
 	private Vector3 drawingPos;
@@ -40,7 +40,7 @@ public class DrawManager : MonoBehaviour {
 	void CheckToDraw()
 	{
 		fps += Time.deltaTime;
-		if (fps > fpsToDraw)
+		if (fps >= fpsToDraw)
 			Draw ();
 	}
 	void Draw()
@@ -54,6 +54,7 @@ public class DrawManager : MonoBehaviour {
 	Vector2[] points;
 	void CreatePolygon()
 	{			
+		
 		float scaleFactor = 1;
 		if (World.Instance.size == UIZoom.sizes.BIG)
 			scaleFactor = 100f;
@@ -62,11 +63,25 @@ public class DrawManager : MonoBehaviour {
 		else
 			scaleFactor = 1;
 
+		int resta = 4;
 
-		DrawingAsset[] assets = container.GetComponentsInChildren<DrawingAsset> ();
+		DrawingAsset[] assets = new DrawingAsset [container.GetComponentsInChildren<DrawingAsset> ().Length/resta];
 
 		if (assets.Length < 3)
 			return;
+		
+		int selectedPointID = 0;
+		int id = 0;
+		foreach (DrawingAsset da in container.GetComponentsInChildren<DrawingAsset> ()) {
+			if (selectedPointID == (resta-1)) {
+				assets [id] = da;
+				id++;
+				selectedPointID = 0;
+			}	else		
+				selectedPointID++;
+		}
+
+
 
 		element = Instantiate (elementFree);
 		element.transform.SetParent (World.Instance.world.transform);
@@ -74,7 +89,7 @@ public class DrawManager : MonoBehaviour {
 		element.transform.localPosition = new Vector3 (0, 1f, 0);
 		
 		points = new Vector2 [assets.Length];
-		int id = 0;
+		id = 0;
 		foreach (DrawingAsset go in assets) {
 			Vector3 _pos_vector3 = go.transform.localPosition;
 			_pos_vector3 /= scaleFactor;
