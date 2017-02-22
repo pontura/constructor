@@ -31,7 +31,7 @@
 		}
 		public override void OnUIButtonInactivate(UIPanel.buttons b) 
 		{
-			if(b == UIPanel.buttons.EDITING)
+			if(b == button)
 			{
 				SetButtonActive (false);
 			}

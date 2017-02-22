@@ -53,6 +53,11 @@ public class ControllerRight : MonoBehaviour {
 			hand.Pointer (HandController.types.RIGHT);
 			simplePointer.enabled = false;
 			break;
+		case Character.states.COLOR_PAINT:
+			hand.Pointer (HandController.types.RIGHT);
+			simplePointer.enabled = false;
+			bezierPointer.enabled = false;
+			break;
 		}
 	}
 
@@ -90,6 +95,10 @@ public class ControllerRight : MonoBehaviour {
 			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
 				Events.OnAddElement (Element.types.CUBE, transform.position);	
 				character.ChangeState (Character.states.EDITING);
+			}
+		} else if (character.state == Character.states.COLOR_PAINT) {
+			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
+				Events.OnTriggerRightDown ();
 			}
 		}
 		else if (character.state == Character.states.EDITING) {

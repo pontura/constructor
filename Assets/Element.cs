@@ -3,9 +3,8 @@ using System.Collections;
 
 public class Element : MonoBehaviour {
 
-	public Material mat_onMovement;
-	public Material mat_normal;
-	public Material mat_over;
+	public Color mat_normal;
+	public Color mat_over;
 
     public types type;
 
@@ -16,6 +15,7 @@ public class Element : MonoBehaviour {
 	public ElementSnapping snapping;
 	public states state;
 	public MeshRenderer meshRenderer;
+	private Color color;
 
 
 	public enum states
@@ -32,6 +32,7 @@ public class Element : MonoBehaviour {
     }
 	
 	public virtual void Start () {
+		this.color = World.Instance.activeColor;
 		Events.OnRecalculateGravity += OnRecalculateGravity;
 		meshRenderer = GetComponent<MeshRenderer> ();
 		childs = GetComponent<ElementChilds> ();
@@ -103,16 +104,10 @@ public class Element : MonoBehaviour {
 	}
 	public void SetOver(bool isOver)
 	{
-		//if (state == states.EDITING)
-		//	return;
-		//if (state == states.CARRYING)
-		//	return;
-		if (isOver) {
-			meshRenderer.material = mat_over;
-		}
-		else
-		{
-			meshRenderer.material = mat_normal;
+		if (isOver)
+			meshRenderer.materials[0].color = mat_over;
+		else {
+			meshRenderer.materials[0].color = color;
 		}
 	}
 
@@ -129,6 +124,10 @@ public class Element : MonoBehaviour {
 		state = states.CARRYING;
     }
 	public virtual void OnStartBeingCarried() {}
+	public virtual void OnChangeColor(Color _color) {
+		this.color = _color;
+		meshRenderer.materials[0].color = color;
+	}
 
     public void StopBeingCarried()
     {	

@@ -11,6 +11,7 @@ public class HandConstructor : MonoBehaviour {
 	public Element carringElement;
 	public List<GameObject> overObjects;
 	public bool isLeft;
+	public Character character;
 
     public enum states
     {
@@ -62,9 +63,7 @@ public class HandConstructor : MonoBehaviour {
 				newGOToRemove = go;
 				break;
 			}
-
-		//print ("RemoveOverObjects" + newGO.name);
-
+		
 		if(newGOToRemove != null)
 			overObjects.Remove (newGOToRemove);		
 
@@ -80,8 +79,6 @@ public class HandConstructor : MonoBehaviour {
 	void SetNewRollOver()
 	{
 		GameObject go = GetActiveObject();
-
-		//print ("SetNewRollOver " + go);
 
 		if (go == null)
 			return;
@@ -110,9 +107,14 @@ public class HandConstructor : MonoBehaviour {
 		GameObject go = GetActiveObject ();
 		if (go == null)
 			return;
-		if (go.GetComponent<Element> ()) {
-			StartCarryingElement (go.GetComponent<Element> ());
-		}
+		
+		Element element = go.GetComponent<Element> ();
+		if (element == null)
+			return;
+		if (character.state == Character.states.EDITING) 
+			StartCarryingElement (element);
+		else if (character.state == Character.states.COLOR_PAINT)
+			element.OnChangeColor (World.Instance.activeColor);
 	}
 	void OnTriggerRighttUp()
 	{
