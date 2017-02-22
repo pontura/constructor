@@ -12,19 +12,33 @@
 
 		public virtual void Start()
 		{
+			if(initSelected)
+				SetButtonActive (true);
+		}
+		void OnEnable()
+		{
 			Events.OnStartUse_UIObject += OnStartUse_UIObject;
 			Events.OnStopUse_UIObject += OnStopUse_UIObject;
 			Events.OnTriggerOverUI += OnTriggerOverUI;
 			Events.OnUIButtonSelected += OnUIButtonSelected;
 			Events.OnUIButtonActivate += OnUIButtonActivate;
-			if(initSelected)
-				SetButtonActive (true);
+			Events.OnUIButtonInactivate += OnUIButtonInactivate;
+
 		}
-		public virtual void OnUIButtonActivate(UIPanel.buttons b) {
-		}
-		public virtual void OnUIButtonSelected(UIButton uiButton)
+		void OnDisable()
 		{
+			Events.OnStartUse_UIObject -= OnStartUse_UIObject;
+			Events.OnStopUse_UIObject -= OnStopUse_UIObject;
+			Events.OnTriggerOverUI -= OnTriggerOverUI;
+			Events.OnUIButtonSelected -= OnUIButtonSelected;
+			Events.OnUIButtonActivate -= OnUIButtonActivate;
+			Events.OnUIButtonInactivate -= OnUIButtonInactivate;
 		}
+
+		public virtual void OnUIButtonActivate(UIPanel.buttons b) { }
+		public virtual void OnUIButtonInactivate(UIPanel.buttons b) { }
+		public virtual void OnUIButtonSelected(UIButton uiButton) { }
+
 		public virtual void OnTriggerOverUI()
 		{
 			if (isOver) {

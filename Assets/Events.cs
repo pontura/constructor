@@ -38,6 +38,7 @@ public static class Events
 	public static System.Action OnTriggerOverUI = delegate { };
 	public static System.Action<VRTK.Examples.UIButton> OnUIButtonSelected = delegate { };
 	public static System.Action<UIPanel.buttons> OnUIButtonActivate = delegate { };
+	public static System.Action<UIPanel.buttons> OnUIButtonInactivate = delegate { };
 
 
 }

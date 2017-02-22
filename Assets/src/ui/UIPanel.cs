@@ -7,6 +7,17 @@ public class UIPanel : MonoBehaviour {
 	public buttons button;
 	public GameObject panel;
 
+	public GameObject uiPanelColors;
+	public GameObject uiPanelInit;
+	public VRTK.Examples.UIButtonSimple colorButton;
+
+	public panels panelActive;
+	public enum panels
+	{
+		INIT,
+		COLORS
+	}
+
 	public enum buttons
 	{		
 		EDITING,
@@ -19,7 +30,10 @@ public class UIPanel : MonoBehaviour {
 		GRAVITY_YES,
 		GRAVITY_NO,
 		SNAPPING_ON,
-		SNAPPING_OFF
+		SNAPPING_OFF,
+		COLORS_ON,
+		COLORS_OFF,
+		COLOR_PICK
 	}
 	public Character character;
 	void Start()
@@ -27,10 +41,15 @@ public class UIPanel : MonoBehaviour {
 		ClickSimpleButton (buttons.CUBE_CONSTRUCTOR);
 		Events.ShowUI += ShowUI;
 		Events.OnChangeCharacterState += OnChangeCharacterState;
+		SetActivePanel ();
 	}
 	void ShowUI(bool isActive)
 	{
 		panel.SetActive (isActive);
+
+		if(isActive)
+			SetActivePanel ();
+		
 		character.interaction_with_ui = isActive;
 	}
 	void OnChangeCharacterState(Character.states state)
@@ -78,6 +97,31 @@ public class UIPanel : MonoBehaviour {
 			break;
 		case buttons.SNAPPING_OFF:
 			World.Instance.useSnapping = false;
+			break;
+		case buttons.COLORS_ON:
+			panelActive = panels.COLORS;
+			SetActivePanel ();
+			break;
+		case buttons.COLORS_OFF:
+			panelActive = panels.INIT;
+			SetActivePanel ();
+			break;
+		}
+	}
+	void SetActivePanel()
+	{
+		switch (panelActive) {
+		case panels.COLORS:
+			uiPanelColors.SetActive (true);
+			uiPanelInit.SetActive (false);
+			break;
+		case panels.INIT:
+			uiPanelColors.SetActive (false);
+			uiPanelInit.SetActive (true);
+			if (character.state == Character.states.COLOR_PAINT) {				
+				Events.OnUIButtonInactivate (buttons.EDITING);
+				colorButton.SetButtonActive (true);
+			}
 			break;
 		}
 	}

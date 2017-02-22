@@ -10,6 +10,7 @@ public class World : MonoBehaviour {
 	public GameObject cameraRig;
 	public bool useGravity;
 	public bool useSnapping;
+	public Color activeColor = Color.red;
 
 	public static World Instance
 	{

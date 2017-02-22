@@ -10,7 +10,8 @@ public class Character : MonoBehaviour {
 		EDITING,
 		CUBE_CONSTRUCTOR,
 		FREE_DRAWING,
-		TELEPORT
+		TELEPORT,
+		COLOR_PAINT
 	}
 	public bool interaction_with_ui;
 
