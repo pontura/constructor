@@ -12,6 +12,9 @@ public class ElementFree : Element {
 		verticesDraggablesTopDown = GetComponent<VerticesDraggablesTopDown> ();
 		polygonCreator = GetComponent<PolygonCreator> ();
 	}
+	public override void DestroyElement() { 
+		base.DestroyElement ();
+	}
 	public void PointsReady(Vector2[] points)
 	{
 		polygonCreator.Create (points);

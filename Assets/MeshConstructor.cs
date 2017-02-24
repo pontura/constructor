@@ -48,6 +48,10 @@ public class MeshConstructor : MonoBehaviour
 		mesh = mf.mesh;
 		Events.OnResizeWorld += OnResizeWorld;
 	}
+	void OnDestroy()
+	{
+		Events.OnResizeWorld -= OnResizeWorld;
+	}
 	void OnResizeWorld(UIZoom.sizes _size)
 	{
 		//pontura:  esto es un hack por si pierde el Collider al hacer Resize (a veces pasa):

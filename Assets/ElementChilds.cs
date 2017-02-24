@@ -11,6 +11,10 @@ public class ElementChilds : MonoBehaviour {
 		Events.StopCarrying += StopCarrying;
 		element = GetComponent<Element> ();
 	}
+	void OnDestroy()
+	{
+		Events.StopCarrying -= StopCarrying;
+	}
 	void StopCarrying(Element e)
 	{
 		if (element == e) {

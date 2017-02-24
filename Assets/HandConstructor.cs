@@ -91,16 +91,25 @@ public class HandConstructor : MonoBehaviour {
 	GameObject GetActiveObject()
 	{
 		foreach (GameObject go in overObjects) {
-			if (go.GetComponent<VerticeDraggable> ()) {
+			if (go == null)
+				StartCoroutine( DestroyDelayed(go));
+			else if (go.GetComponent<VerticeDraggable> ()) {
 				return go;
 			}
 		}
 		foreach (GameObject go in overObjects) {
-			if (go.GetComponent<Element> ()) {
+			if (go == null)
+				StartCoroutine( DestroyDelayed(go));
+			else if (go!= null && go.GetComponent<Element> ()) {
 				return go;
 			}
 		}
 		return null;
+	}
+	IEnumerator DestroyDelayed(GameObject go)
+	{
+		yield return new WaitForSeconds (0.1f);
+		overObjects.Remove (go);
 	}
 	void OnTriggerRightDown()
 	{
@@ -111,10 +120,12 @@ public class HandConstructor : MonoBehaviour {
 		Element element = go.GetComponent<Element> ();
 		if (element == null)
 			return;
-		if (character.state == Character.states.EDITING) 
+		if (character.state == Character.states.EDITING)
 			StartCarryingElement (element);
 		else if (character.state == Character.states.COLOR_PAINT)
 			element.OnChangeColor (World.Instance.activeColor);
+		else if (character.state == Character.states.DESTROY)
+			element.DestroyElement();
 	}
 	void OnTriggerRighttUp()
 	{

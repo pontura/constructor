@@ -149,11 +149,11 @@ public class PolygoncreatorDebug : MonoBehaviour {
 			// triangles around the perimeter of the object
 			int n = (i+1)%polyLength;
 			triangles[count_tris] = i;
-			triangles[count_tris+1] = i + polyLength;
-			triangles[count_tris+2] =  n + polyLength;
-			triangles[count_tris+3] =  n + polyLength;
-			triangles[count_tris+4] = n;
-			triangles[count_tris+5] = i;
+			triangles[count_tris+1] = n;
+			triangles[count_tris+2] =  i + polyLength;
+			triangles[count_tris+3] =   i + polyLength;
+			triangles[count_tris+4] =  n + polyLength;
+			triangles[count_tris+5] = n;
 
 			count_tris += 6;
 		}

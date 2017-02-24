@@ -18,6 +18,10 @@ public class VerticeTopDown : VerticeDraggable {
 	{
 		Events.OnResizeWorldMultiplier += OnResizeWorldMultiplier;
 	}
+	void OnDestroy()
+	{
+		Events.OnResizeWorldMultiplier -= OnResizeWorldMultiplier;
+	}
 	void OnResizeWorldMultiplier(float multiplier)
 	{
 		assetShape.transform.localScale *= multiplier;

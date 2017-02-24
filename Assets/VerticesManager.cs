@@ -20,6 +20,10 @@ public class VerticesManager : MonoBehaviour {
 		AddFaceVertices();
 		Events.DraggReleased += DraggReleased;
 	}
+	void OnDestroy()
+	{
+		Events.DraggReleased -= DraggReleased;
+	}
 	public void ShowOnlyOneVertice(VerticeDraggable vd, bool showIt)
 	{
 		foreach (VerticeDraggable v in verticesDraggables)
@@ -34,9 +38,10 @@ public class VerticesManager : MonoBehaviour {
 			if(v.asset != null)
 				v.asset.SetActive (false);
 	}
-	void OnDestroy()
+	public void OnDestroyElement()
 	{
-		Events.DraggReleased -= DraggReleased;
+		foreach (VerticeDraggable v in verticesDraggables)
+			v.OnDestroyed ();
 	}
 	void DraggReleased()
 	{

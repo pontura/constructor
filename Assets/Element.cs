@@ -32,8 +32,9 @@ public class Element : MonoBehaviour {
     }
 	
 	public virtual void Start () {
-		this.color = World.Instance.activeColor;
 		Events.OnRecalculateGravity += OnRecalculateGravity;
+
+		this.color = World.Instance.activeColor;
 		meshRenderer = GetComponent<MeshRenderer> ();
 		childs = GetComponent<ElementChilds> ();
 		_colliders = GetComponent<Collider> ();
@@ -47,8 +48,11 @@ public class Element : MonoBehaviour {
 			_rigidBody.useGravity = false;
 			_colliders.enabled = true;
 		}
-
     }
+	void OnDestroy()
+	{
+		Events.OnRecalculateGravity -= OnRecalculateGravity;
+	}
 	void OnRecalculateGravity()
 	{
 		_rigidBody.isKinematic = false;
@@ -128,7 +132,14 @@ public class Element : MonoBehaviour {
 		this.color = _color;
 		meshRenderer.materials[0].color = color;
 	}
-
+	public virtual void DestroyElement() { 
+		StopBeingCarried ();
+		Invoke("DelayedDestroy", 0.2f);
+	}
+	void DelayedDestroy()
+	{
+		Destroy (gameObject);
+	}
     public void StopBeingCarried()
     {	
 		//print ("StopBeingCarried");	

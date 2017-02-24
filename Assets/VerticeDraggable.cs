@@ -28,9 +28,16 @@ public class VerticeDraggable : MonoBehaviour {
 			OnOver (false);
 		}
 	}
-	public void OnOver(bool isOver)
+	public void OnDestroyed()
+	{
+		print("OnDestroyed");
+		Events.OnChangeLeftInteractiveState (this.gameObject, false);
+	}
+	bool isOver;
+	public void OnOver(bool _isOver)
 	{	
-		if (isOver) {
+		isOver = _isOver;
+		if (_isOver) {
 			Events.OnChangeLeftInteractiveState (this.gameObject, true);
 		}
 		else {

@@ -14,7 +14,10 @@ public class ElementCube : Element {
 		verticesManager = GetComponent<VerticesManager> ();
 		verticesManager.HideAllVertices ();
 	}
-
+	public override void DestroyElement() { 
+		verticesManager.OnDestroyElement ();
+		base.DestroyElement ();
+	}
 	public override void OnStopBeingCarried() {
 		constructor.RecalculateColliders ();
 	}

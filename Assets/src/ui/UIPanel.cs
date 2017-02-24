@@ -9,13 +9,16 @@ public class UIPanel : MonoBehaviour {
 
 	public GameObject uiPanelColors;
 	public GameObject uiPanelInit;
+	public GameObject uiPanelSettings;
+
 	public VRTK.Examples.UIButtonSimple colorButton;
 
 	public panels panelActive;
 	public enum panels
 	{
 		INIT,
-		COLORS
+		COLORS,
+		SETTINGS
 	}
 
 	public enum buttons
@@ -33,7 +36,10 @@ public class UIPanel : MonoBehaviour {
 		SNAPPING_OFF,
 		COLORS_ON,
 		COLORS_OFF,
-		COLOR_PICK
+		COLOR_PICK,
+		SETTINGS_ON,
+		SETTINGS_OFF,
+		DESTROY
 	}
 	public Character character;
 	void Start()
@@ -106,6 +112,17 @@ public class UIPanel : MonoBehaviour {
 			panelActive = panels.INIT;
 			SetActivePanel ();
 			break;
+		case buttons.SETTINGS_ON:
+			panelActive = panels.SETTINGS;
+			SetActivePanel ();
+			break;
+		case buttons.SETTINGS_OFF:
+			panelActive = panels.INIT;
+			SetActivePanel ();
+			break;
+		case buttons.DESTROY:
+			character.ChangeState (Character.states.DESTROY);
+			break;
 		}
 	}
 	void SetActivePanel()
@@ -114,14 +131,21 @@ public class UIPanel : MonoBehaviour {
 		case panels.COLORS:
 			uiPanelColors.SetActive (true);
 			uiPanelInit.SetActive (false);
+			uiPanelSettings.SetActive (false);
 			break;
 		case panels.INIT:
 			uiPanelColors.SetActive (false);
 			uiPanelInit.SetActive (true);
+			uiPanelSettings.SetActive (false);
 			if (character.state == Character.states.COLOR_PAINT) {				
 				Events.OnUIButtonInactivate (buttons.EDITING);
 				colorButton.SetButtonActive (true);
 			}
+			break;
+		case panels.SETTINGS:
+			uiPanelColors.SetActive (false);
+			uiPanelInit.SetActive (false);
+			uiPanelSettings.SetActive (true);
 			break;
 		}
 	}
