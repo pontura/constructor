@@ -11,6 +11,7 @@ public class World : MonoBehaviour {
 	public bool useGravity;
 	public bool useSnapping;
 	public Color activeColor = Color.red;
+	public Character character;
 
 	public static World Instance
 	{

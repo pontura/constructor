@@ -27,7 +27,7 @@ public static class Events
 
 	public static System.Action OnRecalculateGravity = delegate { };
 
-	public static System.Action<GameObject, bool> OnChangeLeftInteractiveState = delegate { };
+	public static System.Action<GameObject, bool> OnHandOver = delegate { };
 	public static System.Action<Character.states> OnChangeCharacterState = delegate { };
 
 	public static System.Action<Vector3> OnTeleportTo = delegate { };

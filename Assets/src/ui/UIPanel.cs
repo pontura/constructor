@@ -39,7 +39,8 @@ public class UIPanel : MonoBehaviour {
 		COLOR_PICK,
 		SETTINGS_ON,
 		SETTINGS_OFF,
-		DESTROY
+		DESTROY,
+		EDITING_FREE,
 	}
 	public Character character;
 	void Start()
@@ -48,6 +49,7 @@ public class UIPanel : MonoBehaviour {
 		Events.ShowUI += ShowUI;
 		Events.OnChangeCharacterState += OnChangeCharacterState;
 		SetActivePanel ();
+		ShowUI (false);
 	}
 	void ShowUI(bool isActive)
 	{
@@ -62,6 +64,7 @@ public class UIPanel : MonoBehaviour {
 	{
 		switch (state) {
 		case Character.states.EDITING:
+		case Character.states.EDITING_FREE:
 			Events.OnUIButtonActivate(buttons.EDITING);
 			break;
 		}
@@ -72,6 +75,9 @@ public class UIPanel : MonoBehaviour {
 		switch (button) {
 		case buttons.EDITING:
 			character.ChangeState (Character.states.EDITING);
+			break;
+		case buttons.EDITING_FREE:
+			character.ChangeState (Character.states.EDITING_FREE);
 			break;
 		case buttons.CUBE_CONSTRUCTOR:
 			character.ChangeState (Character.states.CUBE_CONSTRUCTOR);
@@ -105,6 +111,7 @@ public class UIPanel : MonoBehaviour {
 			World.Instance.useSnapping = false;
 			break;
 		case buttons.COLORS_ON:
+			character.ChangeState (Character.states.COLOR_PAINT);
 			panelActive = panels.COLORS;
 			SetActivePanel ();
 			break;
@@ -127,6 +134,7 @@ public class UIPanel : MonoBehaviour {
 	}
 	void SetActivePanel()
 	{
+		return;
 		switch (panelActive) {
 		case panels.COLORS:
 			uiPanelColors.SetActive (true);

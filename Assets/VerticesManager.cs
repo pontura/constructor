@@ -9,6 +9,7 @@ public class VerticesManager : MonoBehaviour {
 	public VerticeFaceDraggable verticeDraggable;
 	public VerticeFaceDraggable verticeFaceDraggable;
 	MeshConstructor meshConstructor;
+	private Character character;
 
 	private Vector3 verticesSize = new Vector3 (0.1f, 0.1f, 0.1f);
 
@@ -18,25 +19,37 @@ public class VerticesManager : MonoBehaviour {
 		meshConstructor = GetComponent<MeshConstructor> ();
 		AddVerticeDraggables ();
 		AddFaceVertices();
+		character = World.Instance.character;
 		Events.DraggReleased += DraggReleased;
 	}
 	void OnDestroy()
 	{
 		Events.DraggReleased -= DraggReleased;
 	}
-	public void ShowOnlyOneVertice(VerticeDraggable vd, bool showIt)
+	public void OnVerticeActive(VerticeDraggable vd, bool showIt)
 	{
 		foreach (VerticeDraggable v in verticesDraggables)
-			if (v == vd)
-				v.asset.SetActive (showIt);
-			else
-				v.asset.SetActive (false);
+			if (v != vd)
+				v.OnRollOver (false);
 	}
-	public void HideAllVertices()
+	public void AllVerticesSetState(bool show)
 	{
-		foreach (VerticeDraggable v in verticesDraggables)
-			if(v.asset != null)
-				v.asset.SetActive (false);
+		if (show) {
+			foreach (VerticeDraggable v in verticesDraggables) {
+				if (character.state == Character.states.EDITING) {
+					VerticeFaceDraggable vfd = v.GetComponent<VerticeFaceDraggable> ();
+					if (vfd.face != VerticeFaceDraggable.faces.CORNER)
+						v.gameObject.SetActive (true);
+				} else if (character.state == Character.states.EDITING_FREE) {
+					VerticeFaceDraggable vfd = v.GetComponent<VerticeFaceDraggable> ();
+					if (vfd.face == VerticeFaceDraggable.faces.CORNER)
+						v.gameObject.SetActive (true);
+				}
+			}
+		} else {
+			foreach (VerticeDraggable v in verticesDraggables) 
+				v.gameObject.SetActive (false);
+		}
 	}
 	public void OnDestroyElement()
 	{

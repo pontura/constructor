@@ -26,7 +26,7 @@ public class ElementFree : Element {
 	}
 	public override void OnStartBeingCarried() {
 	}
-	public override void ShowOnlyOneVertice(VerticeDraggable vd, bool showIt)
+	public override void OnVerticeActive(VerticeDraggable vd, bool showIt)
 	{
 		//print("______ ElementFree + ShowOnlyOneVertice " + showIt);
 		//if(showIt)

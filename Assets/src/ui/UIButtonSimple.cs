@@ -25,7 +25,7 @@
 			{
 				if (b == button)
 					SetButtonActive (true);
-					else if(type == types.EDITION)
+				else if(type == types.EDITION)
 					SetButtonActive (false);
 			}
 		}

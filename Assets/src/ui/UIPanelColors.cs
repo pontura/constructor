@@ -8,7 +8,7 @@ public class UIPanelColors : MonoBehaviour {
 	public UIButtonColor buttonColor;
 	public Transform container;
 	private UIPanel uiPanel;
-	private float sizes = -1.6f;
+	private float sizes = -1.65f;
 
 	void Start()
 	{		
@@ -16,13 +16,16 @@ public class UIPanelColors : MonoBehaviour {
 		float _x = 0;
 		float _y = 0;
 
-		int cols = 4;
+		int cols = 5;
 
 		int id = 0;
 
 		foreach(Color c in colors)
 		{
 			UIButtonColor b = Instantiate (buttonColor);
+			if (id == 0) 
+				b.initSelected = true;
+			
 			b.Init (this, c, id);
 			b.transform.SetParent (container);
 			float scale = 0.4f;
@@ -43,6 +46,6 @@ public class UIPanelColors : MonoBehaviour {
 	public void PickColor(int id)
 	{
 		World.Instance.activeColor = colors[id];
-		uiPanel.character.ChangeState (Character.states.COLOR_PAINT);
+		//uiPanel.character.ChangeState (Character.states.COLOR_PAINT);
 	}
 }

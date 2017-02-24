@@ -40,6 +40,7 @@ public class ControllerRight : MonoBehaviour {
 		switch (state) {
 		case Character.states.CUBE_CONSTRUCTOR:
 		case Character.states.EDITING:
+		case Character.states.EDITING_FREE:
 		case Character.states.COLOR_PAINT:
 		case Character.states.DESTROY:
 			hand.Idle (HandController.types.RIGHT);
@@ -103,7 +104,7 @@ public class ControllerRight : MonoBehaviour {
 				Events.OnTriggerRightDown ();
 			}
 		}
-		else if (character.state == Character.states.EDITING) {
+		else if (character.state == Character.states.EDITING || character.state == Character.states.EDITING_FREE) {
 			if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
 				Events.OnTriggerRightDown ();
 				hand.Grab (HandController.types.RIGHT);

@@ -86,23 +86,29 @@ public class Element : MonoBehaviour {
 	{
 		if (other.name == "handOverColliderRight") {
 			OnOver (true);
+		} else if (other.name == "handOverColliderLeft") {
+			OnVerticesChangeState (true);
 		}
 	}
 	void OnTriggerExit(Collider other)
 	{
 		if (other.name == "handOverColliderRight") {
 			OnOver (false);
+		} else if (other.name == "handOverColliderLeft") {
+			OnVerticesChangeState (false);
 		}
 	}
+	public virtual void OnVerticesChangeState(bool show){}
+
 	void OnOver(bool isOver)
 	{
 		if (isOver) {
 			//este es nuevo:SetOver (true);
 			SetOver (true);
-			Events.OnChangeLeftInteractiveState (this.gameObject, true);
+			Events.OnHandOver (this.gameObject, true);
 		}
 		else {
-			Events.OnChangeLeftInteractiveState (this.gameObject, false);
+			Events.OnHandOver (this.gameObject, false);
 			SetOver (false);
 		}
 	}
@@ -115,7 +121,7 @@ public class Element : MonoBehaviour {
 		}
 	}
 
-	public virtual void ShowOnlyOneVertice(VerticeDraggable vd, bool isOver) { }
+	public virtual void OnVerticeActive(VerticeDraggable vd, bool isOver) { }
 
 	private Transform lastParent;
 	public void StartBeingCarried(Transform pivot)

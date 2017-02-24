@@ -12,7 +12,11 @@ public class ElementCube : Element {
 		base.Start ();
 		constructor = GetComponent<MeshConstructor> ();
 		verticesManager = GetComponent<VerticesManager> ();
-		verticesManager.HideAllVertices ();
+		verticesManager.AllVerticesSetState (false);
+	}
+	public override void OnVerticesChangeState(bool show)
+	{
+		verticesManager.AllVerticesSetState (show);
 	}
 	public override void DestroyElement() { 
 		verticesManager.OnDestroyElement ();
@@ -22,11 +26,11 @@ public class ElementCube : Element {
 		constructor.RecalculateColliders ();
 	}
 	public override void OnStartBeingCarried() {
-		verticesManager.HideAllVertices ();
+		verticesManager.AllVerticesSetState (false);
 	}
-	public override void ShowOnlyOneVertice(VerticeDraggable vd, bool showIt)
+	public override void OnVerticeActive(VerticeDraggable vd, bool showIt)
 	{
-		verticesManager.ShowOnlyOneVertice (vd, showIt);
+		verticesManager.OnVerticeActive (vd, showIt);
 		if(showIt)
 			this.isOverVertices = isOverVertices;
 	}

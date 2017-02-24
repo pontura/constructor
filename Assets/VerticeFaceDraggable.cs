@@ -5,18 +5,28 @@ using UnityEngine;
 public class VerticeFaceDraggable : VerticeDraggable {
 
 	public List<VerticeDraggable> childs;
-	public GameObject assetShape;
+	public GameObject asset;
 	public faces face;
 	private MeshConstructor meshConstructor;
 
 	public enum faces
 	{
+		CORNER,
 		TOP,
 		BOTTOM,
 		RIGHT,
 		LEFT,
 		BACK,
 		FRONT
+	}
+	public override void Start()
+	{
+		Events.OnResizeWorldMultiplier += OnResizeWorldMultiplier;
+		base.Start ();
+	}
+	void OnDestroy()
+	{
+		Events.OnResizeWorldMultiplier -= OnResizeWorldMultiplier;
 	}
 	public void Init(MeshConstructor mc, int _id, Vector3 _vectorToModify)
 	{
@@ -41,13 +51,10 @@ public class VerticeFaceDraggable : VerticeDraggable {
 		meshConstructor.SetEditableMode (false);
 		meshConstructor.element.StopBeingEditted ();
 	}
-	void Start()
-	{
-		Events.OnResizeWorldMultiplier += OnResizeWorldMultiplier;
-	}
+
 	void OnResizeWorldMultiplier(float multiplier)
 	{
-		assetShape.transform.localScale *= multiplier;
+		asset.transform.localScale *= multiplier;
 	}
 	public void SetFace(faces _face)
 	{
@@ -74,7 +81,7 @@ public class VerticeFaceDraggable : VerticeDraggable {
 			rot = new Vector3 (-90, 0, 0);
 			break;
 		}
-		assetShape.transform.localEulerAngles = rot;
+		asset.transform.localEulerAngles = rot;
 	}
 	public override void NewPos(Vector3 updaterVector)
 	{

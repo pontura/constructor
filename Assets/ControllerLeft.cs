@@ -7,12 +7,16 @@ public class ControllerLeft : MonoBehaviour
 	public Character character;
 	public HandController hand;
 	SteamVR_TrackedObject trackedObj;
-	public UIZoom uiZoom;
-	public UIPanel uiPanel;
+	//public UIZoom uiZoom;
+	bool UI_ON;
 
 	void Awake()
 	{		
 		trackedObj = GetComponent<SteamVR_TrackedObject>();	
+	}
+	void Start()
+	{
+		Events.ShowUI (false);
 	}
 	void Update()
 	{	
@@ -20,9 +24,9 @@ public class ControllerLeft : MonoBehaviour
 		var device = SteamVR_Controller.Input((int)trackedObj.index);
 
 		if (device.GetPressDown (SteamVR_Controller.ButtonMask.Touchpad)) {
-			Events.ShowUI (true);
+			ChangeUIState ();
 		} else if (device.GetPressUp (SteamVR_Controller.ButtonMask.Touchpad)) {
-			Events.ShowUI (false);
+			//
 		} else if (device.GetTouchDown (SteamVR_Controller.ButtonMask.Trigger)) {
 			hand.Grab (HandController.types.LEFT);
 			Events.OnTriggerLeftDown ();
@@ -32,7 +36,12 @@ public class ControllerLeft : MonoBehaviour
 			Events.ChangeConstructionState (HandConstructor.states.INACTIVE);
 		}
 
-	}		
+	}	
+	void ChangeUIState()
+	{
+		UI_ON = !UI_ON;
+		Events.ShowUI (UI_ON);
+	}
 
 	private readonly Vector2 mXAxis = new Vector2(1, 0);
 	private readonly Vector2 mYAxis = new Vector2(0, 1);
@@ -121,13 +130,13 @@ public class ControllerLeft : MonoBehaviour
 	private void OnSwipeLeft() {
 		//Debug.Log ("Swipe Left");
 		mMessageIndex = 1;
-		uiZoom.SetNewValue(true);
+		//uiZoom.SetNewValue(true);
 	}
 
 	private void OnSwipeRight() {
 		//Debug.Log ("Swipe right");
 		mMessageIndex = 2;
-		uiZoom.SetNewValue(false);
+		//uiZoom.SetNewValue(false);
 	}
 
 	private void OnSwipeTop() {

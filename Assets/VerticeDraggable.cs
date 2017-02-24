@@ -4,18 +4,22 @@ using System.Collections.Generic;
 
 public class VerticeDraggable : MonoBehaviour {
     
-	public GameObject asset;
     public int id;
+
+	public Color activeColor;
+	public Color defaultColor;
     
 	private int factor = 10;
 
-	public Material mat_normal;
-	public Material mat_over;
 	public Element element;
 
 	public Vector3 lastUpdateVector;
+	private MeshRenderer[] meshRenderer;
 
-   
+	public virtual void Start()
+	{
+		meshRenderer = GetComponentsInChildren<MeshRenderer> ();
+	}
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.name == "handOverColliderLeft") {
@@ -26,26 +30,36 @@ public class VerticeDraggable : MonoBehaviour {
 	{
 		if (other.name == "handOverColliderLeft") {
 			OnOver (false);
+			OnRollOver (false);
 		}
 	}
 	public void OnDestroyed()
 	{
-		print("OnDestroyed");
-		Events.OnChangeLeftInteractiveState (this.gameObject, false);
+		Events.OnHandOver (this.gameObject, false);
 	}
 	bool isOver;
 	public void OnOver(bool _isOver)
 	{	
 		isOver = _isOver;
 		if (_isOver) {
-			Events.OnChangeLeftInteractiveState (this.gameObject, true);
+			Events.OnHandOver (this.gameObject, true);
 		}
 		else {
-			Events.OnChangeLeftInteractiveState (this.gameObject, false);
+			Events.OnHandOver (this.gameObject, false);
 		}
-		element.ShowOnlyOneVertice(this, isOver);
+		element.OnVerticeActive(this, isOver);
 	}
-
+	public void OnRollOver(bool isOver)
+	{
+		if (meshRenderer == null)
+			return;
+		foreach (MeshRenderer mr in meshRenderer) {
+			if(isOver)
+				mr.material.color = activeColor;
+			else
+				mr.material.color = defaultColor;
+		}
+	}
 	public void SetFaceType()
 	{
 		gameObject.layer = 13;

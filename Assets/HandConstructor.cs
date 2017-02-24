@@ -9,7 +9,10 @@ public class HandConstructor : MonoBehaviour {
 	public VerticeDraggable verticeDraggable;
 	public GameObject pivot;
 	public Element carringElement;
-	public List<GameObject> overObjects;
+
+	public Element activeElemet;
+	public VerticeDraggable activeVertice;
+
 	public bool isLeft;
 	public Character character;
 
@@ -32,10 +35,11 @@ public class HandConstructor : MonoBehaviour {
 			Events.OnTriggerLeftDown += OnTriggerLeftDown;
 			Events.OnTriggerLeftUp += OnTriggerLeftUp;
 		}
-		Events.OnChangeLeftInteractiveState += OnChangeLeftInteractiveState;
+		Events.OnHandOver += OnHandOver;
+
     }
 
-	void OnChangeLeftInteractiveState(GameObject go, bool isOver)
+	void OnHandOver(GameObject go, bool isOver)
 	{
 		if (isOver)
 			AddOverObjects (go);
@@ -45,87 +49,34 @@ public class HandConstructor : MonoBehaviour {
 	}
 	void AddOverObjects(GameObject newGO)
 	{
-		
-		foreach (GameObject go in overObjects)
-			if (go == newGO)
-				return;
-
-		//print ("newGO" + newGO.name);
-
-		overObjects.Add (newGO);
-		SetNewRollOver();
+		if (isLeft && newGO.GetComponent<VerticeDraggable> ()) {
+			activeVertice = newGO.GetComponent<VerticeDraggable> ();
+			activeVertice.OnRollOver (true);
+		} else if(newGO.GetComponent<Element> ()) {
+			activeElemet = newGO.GetComponent<Element> ();	
+			activeElemet.SetOver (true);
+		}
 	}
 	void RemoveOverObjects(GameObject newGO)
 	{
-		GameObject newGOToRemove = null;
-		foreach (GameObject go in overObjects)
-			if (go == newGO) {
-				newGOToRemove = go;
-				break;
-			}
-		
-		if(newGOToRemove != null)
-			overObjects.Remove (newGOToRemove);		
-
-		Invoke("SetNewRollOver", 0.1f);
-	}
-	void ResetOvers()
-	{
-		foreach (GameObject go in overObjects) {
-			if (go.GetComponent<Element> ()) 
-				go.GetComponent<Element> ().SetOver (false);
+		if (isLeft && newGO.GetComponent<VerticeDraggable> ()) {	
+			if(activeVertice)
+				activeVertice.OnRollOver (false);
+			activeVertice = null;
 		}
-	}
-	void SetNewRollOver()
-	{
-		GameObject go = GetActiveObject();
-
-		if (go == null)
-			return;
-		if (go.GetComponent<VerticeDraggable> ()) {
-			
-		} else if (go.GetComponent<Element> ()) {
-				go.GetComponent<Element> ().SetOver (true);
-			}
-	}
-	GameObject GetActiveObject()
-	{
-		foreach (GameObject go in overObjects) {
-			if (go == null)
-				StartCoroutine( DestroyDelayed(go));
-			else if (go.GetComponent<VerticeDraggable> ()) {
-				return go;
-			}
-		}
-		foreach (GameObject go in overObjects) {
-			if (go == null)
-				StartCoroutine( DestroyDelayed(go));
-			else if (go!= null && go.GetComponent<Element> ()) {
-				return go;
-			}
-		}
-		return null;
-	}
-	IEnumerator DestroyDelayed(GameObject go)
-	{
-		yield return new WaitForSeconds (0.1f);
-		overObjects.Remove (go);
-	}
+		else if( newGO.GetComponent<Element> ()) 
+			activeElemet = null;
+	}	
 	void OnTriggerRightDown()
 	{
-		GameObject go = GetActiveObject ();
-		if (go == null)
+		if (activeElemet == null)
 			return;
-		
-		Element element = go.GetComponent<Element> ();
-		if (element == null)
-			return;
-		if (character.state == Character.states.EDITING)
-			StartCarryingElement (element);
+		if (character.state == Character.states.EDITING || character.state == Character.states.EDITING_FREE)
+			StartCarryingElement (activeElemet);
 		else if (character.state == Character.states.COLOR_PAINT)
-			element.OnChangeColor (World.Instance.activeColor);
+			activeElemet.OnChangeColor (World.Instance.activeColor);
 		else if (character.state == Character.states.DESTROY)
-			element.DestroyElement();
+			activeElemet.DestroyElement();
 	}
 	void OnTriggerRighttUp()
 	{
@@ -138,12 +89,9 @@ public class HandConstructor : MonoBehaviour {
 
 	void OnTriggerLeftDown()
 	{
-		GameObject go = GetActiveObject ();
-		if (go == null)
+		if (activeVertice == null)
 			return;
-		if (go.GetComponent<VerticeDraggable> ()) {
-			StartDragging (go.GetComponent<VerticeDraggable> ());
-		}
+		StartDragging (activeVertice);
 	}
 	void OnTriggerLeftUp()
 	{
