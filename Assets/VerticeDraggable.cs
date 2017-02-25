@@ -99,6 +99,11 @@ public class VerticeDraggable : MonoBehaviour {
 		Vector3 localP = transform.localPosition;
 		transform.position += globalDelta;
 		switch (face) {
+		case VerticeFaceDraggable.faces.CORNER:
+			localP.x = transform.localPosition.x;
+			localP.y = transform.localPosition.y;
+			localP.z = transform.localPosition.z;
+			break;
 		case VerticeFaceDraggable.faces.TOP:
 		case VerticeFaceDraggable.faces.BOTTOM:
 			localP.y = transform.localPosition.y;
