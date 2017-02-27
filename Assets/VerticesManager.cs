@@ -15,7 +15,7 @@ public class VerticesManager : MonoBehaviour {
 
 	private int totalVertices = 8;
 
-	void Start () {
+	public virtual void Start () {
 		meshConstructor = GetComponent<MeshConstructor> ();
 		AddVerticeDraggables ();
 		AddFaceVertices();

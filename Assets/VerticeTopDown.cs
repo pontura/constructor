@@ -55,8 +55,6 @@ public class VerticeTopDown : VerticeDraggable {
 	}
 	public override void NewPos(Vector3 updaterVector)
 	{
-		print (" face: " + face + " NewPos    " + updaterVector.y );
-
 		FixedPositionByFaceTopDown (updaterVector, face);
 		switch (face) {
 		case faces.TOP:

@@ -11,6 +11,7 @@ public class ElementFree : Element {
 		base.Start ();
 		verticesDraggablesTopDown = GetComponent<VerticesDraggablesTopDown> ();
 		polygonCreator = GetComponent<PolygonCreator> ();
+		OnVerticesChangeState (false);
 	}
 	public override void DestroyElement() { 
 		base.DestroyElement ();
@@ -26,11 +27,14 @@ public class ElementFree : Element {
 	}
 	public override void OnStartBeingCarried() {
 	}
-	public override void OnVerticeActive(VerticeDraggable vd, bool showIt)
+	public override void OnVerticesChangeState(bool show)
 	{
-		//print("______ ElementFree + ShowOnlyOneVertice " + showIt);
-		//if(showIt)
-			//this.isOverVertices = isOverVertices;
+		verticesDraggablesTopDown.verticeTop.assetShape.SetActive (show);
+		verticesDraggablesTopDown.verticeBottom.assetShape.SetActive (show);
+	}
+	public override void OnVerticeActive(VerticeDraggable vd, bool isOver)
+	{
+		vd.GetComponent<VerticeTopDown>().OnRollOver(isOver);
 	}
 
 }

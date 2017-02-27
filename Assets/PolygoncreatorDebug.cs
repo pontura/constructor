@@ -13,7 +13,7 @@ public class PolygoncreatorDebug : MonoBehaviour {
 	private Mesh mesh;
 
 	Vector3[] vertices;
-	Vector2[] uvs;
+	//Vector2[] uvs;
 
 	Triangulator triangulator;
 	int polyLength;
@@ -68,8 +68,12 @@ public class PolygoncreatorDebug : MonoBehaviour {
 
 		triangulator = new Triangulator(v2d);
 		trianlges = triangulator.Triangulate();
-		vertices = new Vector3[v2d.Length*2];
-		uvs = new Vector2[v2d.Length*2];
+		foreach (int a in trianlges) {
+			print (a);
+		}
+		//vertices = new Vector3[v2d.Length];
+		vertices = new Vector3[v2d.Length*6];
+	//	uvs = new Vector2[v2d.Length*2];
 
 		polyLength = v2d.Length;
 
@@ -113,9 +117,9 @@ public class PolygoncreatorDebug : MonoBehaviour {
 		for(int i=0;i<polyLength;i++)
 		{
 			vertices[i].y = offsetInitial_up; // front vertex
-			uvs[i] = new Vector2(vertices[i].x, vertices[i].z); // front vertex
+			//uvs[i] = new Vector2(vertices[i].x, vertices[i].z); // front vertex
 			vertices[i+polyLength].y = offsetInitial_down;  // back vertex    
-			uvs[i+polyLength] = new Vector2(vertices[i+polyLength].x, vertices[i+polyLength].z);  // back vertex  
+		//	uvs[i+polyLength] = new Vector2(vertices[i+polyLength].x, vertices[i+polyLength].z);  // back vertex  
 
 			CreateFreeVertice (vertices[i], i+"a");
 			CreateFreeVertice (vertices[i+polyLength], i+"b");
@@ -131,6 +135,7 @@ public class PolygoncreatorDebug : MonoBehaviour {
 			triangles[i+2] = trianlges[i+2];
 		} 
 		// front vertices
+
 		count_tris+=trianlges.Length;
 		for(int i=0;i<trianlges.Length;i+=3)
 		{
@@ -140,28 +145,59 @@ public class PolygoncreatorDebug : MonoBehaviour {
 		} // back vertices
 		count_tris+=trianlges.Length;
 
-		//0,2,3,//first triangle
-		//3,1,0,//second triangle
+		int verticesCount = polyLength*2;
 
-
+		//paredes :
 		for(int i=0;i<polyLength;i++)
 		{
-			// triangles around the perimeter of the object
-			int n = (i+1)%polyLength;
-			triangles[count_tris] = i;
-			triangles[count_tris+1] = n;
-			triangles[count_tris+2] =  i + polyLength;
-			triangles[count_tris+3] =   i + polyLength;
-			triangles[count_tris+4] =  n + polyLength;
-			triangles[count_tris+5] = n;
+			int next = (i+1)%polyLength;
+
+			int A = verticesCount++;
+			int B = verticesCount++;
+			int C = verticesCount++;
+			int D = verticesCount++;
+
+			vertices[A] = vertices[i]; // front vertex			
+			vertices[B] = vertices[i+polyLength]; // front vertex
+			vertices[C] = vertices[next]; // front vertex
+			vertices[D] = vertices[next+polyLength]; // front vertex
+
+			triangles[count_tris] = A;
+			triangles[count_tris+1] = B;
+			triangles[count_tris+2] = C;
+
+			triangles[count_tris+3] = B;
+			triangles[count_tris+4] = D;
+			triangles[count_tris+5] = C;
 
 			count_tris += 6;
 		}
 
+
+
+
 		mesh.Clear ();
 		mesh.vertices = vertices;
 		mesh.triangles = triangles;
-		mesh.uv = uvs;
+		//mesh.uv = uvs;
+		CalculateNormals ();
+		return;
+
+
+
+
+
+
+		//0,2,3,//first triangle
+		//3,1,0,//second triangle
+
+
+
+
+		mesh.Clear ();
+		mesh.vertices = vertices;
+		mesh.triangles = triangles;
+		//mesh.uv = uvs;
 		CalculateNormals ();
 
 	}

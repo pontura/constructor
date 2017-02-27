@@ -64,8 +64,10 @@ public class UIPanel : MonoBehaviour {
 	{
 		switch (state) {
 		case Character.states.EDITING:
-		case Character.states.EDITING_FREE:
 			Events.OnUIButtonActivate(buttons.EDITING);
+			break;
+		case Character.states.EDITING_FREE:
+			Events.OnUIButtonActivate(buttons.EDITING_FREE);
 			break;
 		}
 	}
